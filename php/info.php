@@ -1,8 +1,8 @@
 <?php
 $servername = "mysql.hostinger.co.uk";
-$username = "u697075009_user";
-$password = "yTanyR";
-$dbname = "u697075009_data";
+$username = "u464162183_user";
+$password = "iLY6abhAkI";
+$dbname = "u464162183_data";
 $key = "";
 $char = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -12,6 +12,8 @@ $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+
 
 //generate random key
 //function generateKey($length_of_key){
@@ -48,7 +50,7 @@ $sql = "INSERT INTO DATA (shortlink,longlink)
 VALUES ( '$key', '$longlink')";
 
 if ($conn->query($sql) === TRUE) {
-  echo 'UPDATE ALL GOOD. Your new url is http://finalyearproject.pe.hu/php/' .$key ;
+  echo 'UPDATE ALL GOOD. Your new url is http://finalyearproject.pe.hu/' .$key ;
 
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
