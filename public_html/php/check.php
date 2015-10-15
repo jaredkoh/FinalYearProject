@@ -65,7 +65,11 @@ $data = fopen("data.txt" , "w");
 fwrite($data ,"\n"."$ip"." says: ");
 fclose($data);
 
-
+echo gethostbyaddr("$ip");
+echo "\n".$ip."\n";
+//depends on location / this ip for good result 12.215.42.19 ;
+$check = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true");
+echo $check;
 //REDIRECTING TO LONG LINK
 header("Location:".$htmlFileName, true, 303);
 die();
