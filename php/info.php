@@ -48,7 +48,7 @@ $sql = "INSERT INTO DATA (shortlink,longlink)
 VALUES ( '$key', '$longlink')";
 
 if ($conn->query($sql) === TRUE) {
-  echo 'UPDATE ALL GOOD. Your new url is http://finalyearproject.pe.hu/' .$key ;
+  echo 'UPDATE ALL GOOD. Your new url is http://finalyearproject.pe.hu/php/' .$key ;
 
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
