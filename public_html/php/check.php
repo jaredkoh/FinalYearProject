@@ -1,5 +1,5 @@
 <?php>
-include scripts/simple_html_dom.php ;
+include "../scripts/simple_html_dom.php" ;
 
 $servername = "mysql.hostinger.co.uk";
 $username = "u464162183_user";
