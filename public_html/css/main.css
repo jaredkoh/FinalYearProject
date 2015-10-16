@@ -1,52 +1,28 @@
-body{
-    background-color:black;
-}
-
-.jumbotron{
-  background-color: black;
-}
-
-h1{
-    text-align: center;
-    color:white;
-}
-h3{
-  text-align: center;
-  color:white;
-}
-
 .urlform{
-  margin-right: auto;
-  margin-left: auto;
-  width: 500px;
+  padding-top: 250px;
+  height: 200px;
+  width:  700px;
+  margin:  0 auto 0 auto;
+}
+.bgvid{
+  position: fixed;
+   top: 50%;
+   left: 50%;
+   min-width: 100%;
+   min-height: 100%;
+   width: auto;
+   height: auto;
+   z-index: -100;
+   -webkit-transform: translateX(-50%) translateY(-50%);
+   transform: translateX(-50%) translateY(-50%);
+   background-size: cover;
+}
+h1{
+  font-weight: bold;
+  color: #fff;
+  font-size: 65px;
 }
 
-
-urllink{
-  width:500px;
+.submit{
+  float: right;
 }
-
-video#bgvid { 
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    min-width: 100%;
-    min-height: 100%;
-    width: auto;
-    height: auto;
-    z-index: -100;
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%);
-    background: no-repeat;
-    background-size: cover; 
-}
-
-.mainpage{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform: translate(-50%, -50%);
-
-}
-
-
