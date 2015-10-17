@@ -50,7 +50,7 @@ VALUES ( '$key', '$longlink')";
 
 if ($conn->query($sql) === TRUE) {
   //echo 'UPDATE ALL GOOD. Your new url is http://individualproject.esy.es/php/' .$key ;
-  $userlink = "http://individualproject.esy.es/php/".$key;
+  $userlink = "http://individualproject.esy.es/shorten/".$key;
 
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
