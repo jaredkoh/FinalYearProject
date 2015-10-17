@@ -61,15 +61,17 @@ getenv('HTTP_X_FORWARDED')?:
 getenv('HTTP_FORWARDED_FOR')?:
 getenv('HTTP_FORWARDED')?:
 getenv('REMOTE_ADDR');
-$data = fopen("data.txt" , "w");
-fwrite($data ,"\n"."$ip"." says: ");
+$data = fopen("../public_html/data.txt" , "w");
+$check = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true");
+
+fwrite($data ,"\n"."$ip"."$check"." says: ");
 fclose($data);
 
 echo gethostbyaddr("$ip");
 echo "\n".$ip."\n";
 //depends on location / this ip for good result 12.215.42.19 ;
-$check = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true");
-echo $check;
+//$check = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true");
+//echo $check;
 //REDIRECTING TO LONG LINK
 header("Location:".$htmlFileName, true, 303);
 die();
