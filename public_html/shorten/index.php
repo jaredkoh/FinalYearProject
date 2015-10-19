@@ -84,7 +84,7 @@ $conn->close(); ?>
   <body>
       <div class = "urlform" >
             <h1> Hello There! </h1>
-              <button type="button" class="btn btn-success" style="float:right" id="copy">Copy</button>
+              <button type="button" class="btn btn-success" style="float:right" id="go">Go</button>
               <div style="overflow: hidden; padding-right: .5em;">
                 <input type="url" class="form-control" name="urllink" id="form" value=<?php echo $userlink ?>>
               </div>​

@@ -1,10 +1,8 @@
 
 $(document).ready(function(){
     highlight($("#form"));
-    $("#copy").click(function(){
-      var text = $('form').val();
-      document.execcommand("copy");
-
+    $("#go").click(function(){
+        window.location.replace($("#form").val());
     })
 });
 
