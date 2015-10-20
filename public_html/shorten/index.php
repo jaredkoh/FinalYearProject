@@ -20,6 +20,7 @@ for ($i = 0 ; $i < 5 ; $i ++){
   $temp = rand(0, 61);
   $key .= $char[$temp];
   }
+$folderName = $key;
 //}
 //checks for duplicate keys in the database
 // function checkingDuplication($key){
@@ -39,7 +40,7 @@ for ($i = 0 ; $i < 5 ; $i ++){
 //generateKey(5);
 //checkingDuplication($key);
 
-$key .= '.php';
+//$key .= '.php';
 
 
 
@@ -50,13 +51,18 @@ VALUES ( '$key', '$longlink')";
 
 if ($conn->query($sql) === TRUE) {
   //echo 'UPDATE ALL GOOD. Your new url is http://individualproject.esy.es/php/' .$key ;
-  $userlink = "http://individualproject.esy.es/shorten/".$key;
+  $userlink = "http://individualproject.esy.es/".$folderName."/get.php";
 
 } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
 }
 
-$myfile = fopen("$key", "w") or die("Unable to open file!");
+if (!is_dir($folderName)) {
+  $full = getcwd();
+  $path = substr($full , 0 , strlen($full) - strlen(strrchr($full , "/")));
+  mkdir($path."/"."$folderName" , 0777 , true);
+}
+$myfile = fopen("../$folderName/get.php", "w") or die("Unable to open file!");
 $myfileToRead = fopen("../php/check.php", "r") or die("Unable to open file!");
 $txt = fread($myfileToRead,filesize("../php/check.php"));
 fclose($myfileToRead);

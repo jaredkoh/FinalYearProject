@@ -20,7 +20,7 @@ for ($i = 0 ; $i < 5 ; $i ++){
   $temp = rand(0, 61);
   $key .= $char[$temp];
   }
-//}
+}
 //checks for duplicate keys in the database
 // function checkingDuplication($key){
 // $check = "SELECT * FROM DATA WHERE shortlink='$key'";

