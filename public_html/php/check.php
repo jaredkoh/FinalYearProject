@@ -1,32 +1,15 @@
 <?php>
 include "../scripts/simple_html_dom.php" ;
+include "../php/DataBaseHandling.php";
 
-$servername = "mysql.hostinger.co.uk";
-$username = "u464162183_user";
-$password = "iLY6abhAkI";
-$dbname = "u464162183_data";
-
-//CONNECTING TO DATABASE
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+$conn = openConnection();
 //SEARCHING DATABASE WITH KEY TO GET LONGLINK
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
 //$key = substr(strrchr($actual_link, "/"), 1);
 $key = substr($_SERVER[REQUEST_URI],1,5);
-echo $key;
-$sql = "SELECT longlink FROM DATA WHERE shortlink='{$key}'";
-$result = $conn->query($sql);
-$arrayOfResults = mysqli_fetch_row($result);
-$link = $arrayOfResults[0];
-$conn->close();
-
+$link = selectDataFromDatabase($key, $conn);
 
 //DUPLICATING HTML FILE ONTO OWN SERVER
-//$identifier = substr($key , 0 , 5);
 $htmlFileName = "index.html";
 $html=fopen($htmlFileName, "w");
 fwrite($html , file_get_contents("$link"));
