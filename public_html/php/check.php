@@ -1,4 +1,4 @@
-<?php>
+<?php
 include "../scripts/simple_html_dom.php" ;
 include "../php/DataBaseHandling.php";
 
@@ -26,8 +26,6 @@ foreach($html->find('img') as $element){
           mkdir(getcwd().$path , 0777 , true);
           echo $link.$img;
           copy($link.$img , getcwd().$img);
-
-      //    file_put_contents(getcwd()."$img", $lol);
       }
       else{
             die('Failed to create folders...');

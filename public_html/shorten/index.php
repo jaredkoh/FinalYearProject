@@ -7,18 +7,16 @@ $longlink = "$_POST[urllink]";
 $key = checkForDuplicateLinks($longlink,$conn);
 if(is_null($key)===TRUE){
   $key = generateKey(6,$key);
-  $finalKey = checkForDuplicateKeys($key , $conn);
+  $key = checkForDuplicateKeys($key , $conn);
   addDataToDatabase($key , $longlink , $conn);
-}
 
-$folderName = $key;
-$userlink = "http://individualproject.esy.es/".$folderName."/get.php";
+$userlink = "http://individualproject.esy.es/".$key."/get.php";
+if (!is_dir($key)) {
 
-if (!is_dir($folderName)) {
   $full = getcwd();
   $path = substr($full , 0 , strlen($full) - strlen(strrchr($full , "/")));
-  mkdir($path."/"."$folderName" , 0777 , true);
-}
+  mkdir($path."/"."$key" , 0777 , true);
+
 $myfile = fopen("../$folderName/get.php", "w") or die("Unable to open file!");
 $myfileToRead = fopen("../php/check.php", "r") or die("Unable to open file!");
 $txt = fread($myfileToRead,filesize("../php/check.php"));
@@ -26,7 +24,11 @@ fclose($myfileToRead);
 
 fwrite($myfile, $txt);
 fclose($myfile);
-
+  }
+}
+else{
+  $userlink = "http://individualproject.esy.es/".$key."/get.php";
+}
 $conn->close(); ?>
 
 
@@ -46,7 +48,7 @@ $conn->close(); ?>
   </head>
   <body>
       <div class = "urlform" >
-            <h1> Hello There! </h1>
+            <h1> Thanks For Using :) </h1>
               <button type="button" class="btn btn-success" style="float:right" id="go">Go</button>
               <div style="overflow: hidden; padding-right: .5em;">
                 <input type="url" class="form-control" name="urllink" id="form" value=<?php echo $userlink ?>>
