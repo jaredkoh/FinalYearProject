@@ -1,10 +1,12 @@
 <?php
+session_start();
 include "../php/DataBaseHandling.php";
 $key = "";
 $conn = openConnection();
 
 $longlink = $_POST['urllink'];
-$script = $_POST['Type'];
+$_SESSION['urllink']=$_POST['urllink'];
+$_SESSION['Type']=$_POST['Type'];
 $key = checkForDuplicateLinks($longlink,$conn);
 if(is_null($key)===TRUE){
   $key = generateKey(6,$key);
@@ -17,8 +19,8 @@ if (!is_dir($key)) {
   $path = substr($full , 0 , strlen($full) - strlen(strrchr($full , "/")));
   mkdir($path."/"."$key" , 0777 , true);
 $myfile = fopen("../$key/get.php", "w") or die("Unable to open file!");
-$myfileToRead = fopen("../php/check.php", "r") or die("Unable to open file!");
-$txt = fread($myfileToRead,filesize("../php/check.php"));
+$myfileToRead = fopen("../php/SelectedController.php", "r") or die("Unable to open file!");
+$txt = fread($myfileToRead,filesize("../php/SelectedController.php"));
 fclose($myfileToRead);
 
 fwrite($myfile, $txt);
