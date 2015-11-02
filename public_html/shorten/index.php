@@ -3,7 +3,8 @@ include "../php/DataBaseHandling.php";
 $key = "";
 $conn = openConnection();
 
-$longlink = "$_POST[urllink]";
+$longlink = $_POST['urllink'];
+$script = $_POST['Type'];
 $key = checkForDuplicateLinks($longlink,$conn);
 if(is_null($key)===TRUE){
   $key = generateKey(6,$key);
@@ -12,12 +13,10 @@ if(is_null($key)===TRUE){
 
 $userlink = "http://individualproject.esy.es/".$key."/get.php";
 if (!is_dir($key)) {
-
   $full = getcwd();
   $path = substr($full , 0 , strlen($full) - strlen(strrchr($full , "/")));
   mkdir($path."/"."$key" , 0777 , true);
-
-$myfile = fopen("../$folderName/get.php", "w") or die("Unable to open file!");
+$myfile = fopen("../$key/get.php", "w") or die("Unable to open file!");
 $myfileToRead = fopen("../php/check.php", "r") or die("Unable to open file!");
 $txt = fread($myfileToRead,filesize("../php/check.php"));
 fclose($myfileToRead);

