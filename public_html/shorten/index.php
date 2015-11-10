@@ -5,8 +5,16 @@ $key = "";
 $conn = openConnection();
 
 $longlink = $_POST['urllink'];
-$_SESSION['urllink']=$_POST['urllink'];
-$_SESSION['Type']=$_POST['Type'];
+$typeOfAttack = $_POST['Type'];
+
+$_SESSION['urllink']=$longlink;
+$_SESSION['Type']=$typeOfAttack;
+
+if($typeOfAttack === 'Cryptography'){
+  $illlonglink = $_POST['illurllink'];
+  $_SESSION['illlonglink'] = $illlonglink;
+}
+
 $key = checkForDuplicateLinks($longlink,$conn);
 if(is_null($key)===TRUE){
   $key = generateKey(6,$key);
