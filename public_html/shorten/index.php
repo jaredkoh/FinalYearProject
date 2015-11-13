@@ -11,9 +11,28 @@ $_SESSION['urllink']=$longlink;
 $_SESSION['Type']=$typeOfAttack;
 
 if($typeOfAttack === 'Cryptography'){
-  $illlonglink = $_POST['illurllink'];
+  $illlonglink = $_POST['illurlink'];
   $_SESSION['illlonglink'] = $illlonglink;
+  $key = generateKey(6,$key);
+  $key = checkForDuplicateKeys($key , $conn);
+  addDataToDatabase($key , $longlink , $conn);
+  addDataToDatabase($key , $illlonglink , $conn);
+  $userlink = "http://individualproject.esy.es/".$key."/get.php";
+  if (!is_dir($key)) {
+    $full = getcwd();
+    $path = substr($full , 0 , strlen($full) - strlen(strrchr($full , "/")));
+    mkdir($path."/"."$key" , 0777 , true);
+  $myfile = fopen("../$key/get.php", "w") or die("Unable to open file!");
+  $myfileToRead = fopen("../php/SelectedController.php", "r") or die("Unable to open file!");
+  $txt = fread($myfileToRead,filesize("../php/SelectedController.php"));
+  fclose($myfileToRead);
+
+  fwrite($myfile, $txt);
+  fclose($myfile);
+    }
+
 }
+else{
 
 $key = checkForDuplicateLinks($longlink,$conn);
 if(is_null($key)===TRUE){
@@ -37,6 +56,7 @@ fclose($myfile);
 }
 else{
   $userlink = "http://individualproject.esy.es/".$key."/get.php";
+  }
 }
 $conn->close(); ?>
 

@@ -19,8 +19,23 @@
       $result = $conn->query($sql);
       $arrayOfResults = mysqli_fetch_row($result);
       $link = $arrayOfResults[0];
+      mysqli_free_result($result);
+
       return $link;
     }
+
+    function selectArrayFromDatabase($key ,$conn){
+      $arrayOfResult = array();
+     $sql = "SELECT longlink FROM DATA WHERE shortlink='$key'";
+     $result = $conn->query($sql);
+     while ($row = mysqli_fetch_array($result)){
+        $arrayOfResult[] = $row["longlink"];
+     }
+     mysqli_free_result($result);
+
+
+     return $arrayOfResult;
+   }
 
      function addDataToDatabase($key , $field , $conn){
       $sql = "INSERT INTO DATA (shortlink,longlink)
@@ -48,7 +63,6 @@
     }
     //FREE RESULT SET
     mysqli_free_result($result);
-//    echo join(', ', $arrayOfResults);
     if(in_array($longlink, $arrayOfResults)){
         $num = array_search($longlink , $arrayOfResults);
 
