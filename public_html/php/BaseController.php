@@ -49,7 +49,7 @@ function runScript($textToInsert){
 	$htmlFileName = duplicateHtml($link);
 	downloadAndCreateImage($link);
 	$contents = file_get_contents("$htmlFileName");
-	$newContent = preg_replace("</body>", $textToInsert."</body", $contents);
+	$newContent = preg_replace("<body>", $textToInsert."<body>", $contents);
 	file_put_contents($htmlFileName, $newContent);
 	redirectToOriginalLink($htmlFileName);
 
