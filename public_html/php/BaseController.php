@@ -12,13 +12,14 @@ function duplicateHtml($link){
 }
 
 //CREATING PATHS FOR OTHER FILES FOUND IN HTML
-function downloadAndCreateImage($link){
+function downloadAndCreateImage($key, $link){
 	$html = file_get_html($link);
 	foreach($html->find('img') as $element){
 		$img = $element->src ;
 
 		// Starts with http:// or https:// (case insensitive).
 		if (preg_match('#^https?://#i', $img) === 0) {
+			$element->src =  "http://individualproject.esy.es/".$key."/".$element->src;
 			if (!is_dir("$img")){
 
 				$path = substr($img , 0 , strlen($img) - strlen(strrchr($img , "/")));
@@ -29,8 +30,9 @@ function downloadAndCreateImage($link){
 				die('Failed to create folders...');
 			}
 		}
-
 	};
+
+	$html->save($link);
 }
 
 // MAIN SCRIPT THAT RUNS FOR MOST ATT
@@ -40,14 +42,14 @@ function runScript($textToInsert){
 	$key = substr($_SERVER[REQUEST_URI],1,5);
 	$link = selectDataFromDatabase($key, $conn);
 	$htmlFileName = duplicateHtml($link);
-	//	 downloadAndCreateImage($link);
+		 downloadAndCreateImage($key , $link);
 
 	$domObject = file_get_html($htmlFileName);
-	foreach($domObject->find('img') as $element){
-		if(!strpos($element->src , $link)){
-			$element->src = $link.$element->src ;
-		}
-	}
+	// foreach($domObject->find('img') as $element){
+	// 	if(!strpos($element->src , $link)){
+	// 		$element->src = $link.$element->src ;
+	// 	}
+	// }
 	$element = $domObject->find('head',0);
 	$element->innertext = $element->innertext . $textToInsert;
 	echo $domObject->save($htmlFileName);

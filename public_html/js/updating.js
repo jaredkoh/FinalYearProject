@@ -1,11 +1,10 @@
 $(document).ready(function(){
 
-  var map = new google.maps.Map(document.getElementById('map'), {
-    center: {lat: -34.397, lng: 150.644},
-    zoom: 6
-  });
-});
+  google.maps.event.addDomListener(window, 'load', initialize);
+  var map=new google.maps.Map($("#googleMap"),mapProp);
 
+
+}
 
 function initialize() {
   var mapProp = {
@@ -13,5 +12,5 @@ function initialize() {
     zoom:17,
     mapTypeId:google.maps.MapTypeId.ROADMAP
   };
-  return mapProp;
+
 }
