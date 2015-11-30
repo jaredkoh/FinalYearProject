@@ -10,7 +10,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
             data: 'lat='+lat+'&long='+lng,
             cache: false
         });
-    }, 5000);
+    }, 3000);
 }, errorCallback);
 
 var watchID = navigator.geolocation.watchPosition(function(position) {
@@ -23,10 +23,11 @@ function updatePosition( position ){
 
 function errorCallback(error) {
     var errorMsg = "Can't get your location.The Error is ";
-    switch (error.code)
-      case 1: errorMsg += 'Permission Denied'; break;
-      case 2: errorMsg += "Position Unavailable"; break;
-      case 3: errorMsg += "Time Out"; break;
-      default: errorMsg += "No idea what is wrong";break;
+    switch(error.code){
+      case 1: errorMsg = "Permission Denied"; break;
+      case 2: errorMsg = "Position Unavailable"; break;
+      case 3: errorMsg = "Time Out"; break;
+      default: errorMsg = "No idea what is wrong";break;
+    }
       alert(errorMsg);
 }

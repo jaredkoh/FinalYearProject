@@ -61,7 +61,33 @@ function addCoordinatesToDatabase($lat , $long , $conn){
 
 }
 
-function closeConnection(){
+function getMostRecentCoordinates($conn){
+  $latLng = "";
+  $sql="SELECT lat , longi FROM POSITION WHERE ID = (SELECT MAX(ID) FROM POSITION)";
+  $result = $conn->query($sql);
+  while ($row = mysqli_fetch_array($result)){
+    $a = (string)$row['lat'];
+    $b = (string)$row['longi'];
+    $latLng = $a.','.$b;
+  }
+  
+  mysqli_free_result($result);
+  echo $latLng === "" ? "no suggestion" : $latLng;
+
+}
+
+function deleteAllFromDataBase(){
+  $sql="DELETE FROM POSITION";
+  if ($conn->query($sql) === TRUE) {
+    //echo 'UPDATE ALL GOOD. Your new url is http://individualproject.esy.es/php/' .$key ;
+
+  } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+  }
+
+}
+
+function closeConnection($conn){
   $conn->close();
 }
 

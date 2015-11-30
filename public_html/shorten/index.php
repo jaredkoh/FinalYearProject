@@ -50,17 +50,17 @@ if($typeOfAttack === 'Cryptography'){
   $userlink = "http://individualproject.esy.es/".$key."/get.php";
   createFolderAndFile($key);
 }
-else if($typeOfAttack ==="Tracking"){
-    $map =    "<div id='map' class='form-control' style='height:500px'></div>";
+//else if($typeOfAttack ==="Tracking"){
+    // $map =    "<div id='map' class='form-control' style='height:500px'></div>";
+    //
+    // $html = file_get_html("http://individualproject.esy.es/shorten/");
+    // $element = $html->find('div[class=urlform]',0);
+    //
+    // $element->innertext =  $element->innertext.$map;
+    //
+    // $html->save("http://individualproject.esy.es/shorten/");
 
-    $html = file_get_html("http://individualproject.esy.es/shorten/");
-    $element = $html->find('div[class=urlform]',0);
-
-    $element->innertext =  $element->innertext.$map;
-
-    $html->save("http://individualproject.esy.es/shorten/");
-
-}
+//}
 else{
   $key = checkForDuplicateLinks($longlink,$conn);
   if(is_null($key)===TRUE){
@@ -98,7 +98,7 @@ $conn->close(); ?>
     <h1> Thanks For Using :) </h1>
     <button type="button" class="btn btn-success" style="float:right" id="go">Go</button>
     <div style="overflow: hidden; padding-right: .5em;">
-      <input type="url" class="form-control" name="urllink" id="form" value=<?php echo $userlink ?>
+      <input type="url" class="form-control" name="urllink" id="form" value=<?php echo $userlink ?>></input>
     </div>​
 
   </div>
