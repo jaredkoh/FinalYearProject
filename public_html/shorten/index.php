@@ -47,18 +47,18 @@ if($typeOfAttack === 'Cryptography'){
   // fwrite($publicKeyTextFile , "$pubKey");
   // fclose($publicKeyTextFile);
 
-  $userlink = "http://individualproject.esy.es/".$key."/get.php";
+  $userlink = "http://kclproject.esy.es/".$key."/get.php";
   createFolderAndFile($key);
 }
 //else if($typeOfAttack ==="Tracking"){
     // $map =    "<div id='map' class='form-control' style='height:500px'></div>";
     //
-    // $html = file_get_html("http://individualproject.esy.es/shorten/");
+    // $html = file_get_html("http://kclproject.esy.es/shorten/");
     // $element = $html->find('div[class=urlform]',0);
     //
     // $element->innertext =  $element->innertext.$map;
     //
-    // $html->save("http://individualproject.esy.es/shorten/");
+    // $html->save("http://kclproject.esy.es/shorten/");
 
 //}
 else{
@@ -67,11 +67,11 @@ else{
     $key = generateKey(6,$key);
     $key = checkForDuplicateKeys($key , $conn);
     addDataToDatabase($key , $longlink , $conn);
-    $userlink = "http://individualproject.esy.es/".$key."/get.php";
+    $userlink = "http://kclproject.esy.es/".$key."/get.php";
     createFolderAndFile($key);
   }
   else{
-    $userlink = "http://individualproject.esy.es/".$key."/get.php";
+    $userlink = "http://kclproject.esy.es/".$key."/get.php";
   }
 }
 

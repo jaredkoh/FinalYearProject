@@ -2,9 +2,9 @@
 function openConnection(){
   //USERNAMES AND PASSWORDS FOR DATABASE
   $servername = "mysql.hostinger.co.uk";
-  $username = "u464162183_user";
-  $password = "iLY6abhAkI";
-  $dbname = "u464162183_data";
+  $username = "u845253970_user";
+  $password = "iloveshyen";
+  $dbname = "u845253970_data";
   //CONNECTING TO DATABASE
   $conn = new mysqli($servername, $username, $password, $dbname);
   // Check connection
@@ -70,7 +70,7 @@ function getMostRecentCoordinates($conn){
     $b = (string)$row['longi'];
     $latLng = $a.','.$b;
   }
-  
+
   mysqli_free_result($result);
   echo $latLng === "" ? "no suggestion" : $latLng;
 
