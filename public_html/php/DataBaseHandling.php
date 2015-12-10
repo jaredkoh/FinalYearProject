@@ -2,9 +2,9 @@
 function openConnection(){
   //USERNAMES AND PASSWORDS FOR DATABASE
   $servername = "mysql.hostinger.co.uk";
-  $username = "u845253970_user";
+  $username = "u854725684_user";
   $password = "iloveshyen";
-  $dbname = "u845253970_data";
+  $dbname = "u854725684_data";
   //CONNECTING TO DATABASE
   $conn = new mysqli($servername, $username, $password, $dbname);
   // Check connection
@@ -41,7 +41,7 @@ function addDataToDatabase($key , $field , $conn){
   $sql = "INSERT INTO DATA (shortlink,longlink)
   VALUES ( '$key' , '$field')";
   if ($conn->query($sql) === TRUE) {
-    //echo 'UPDATE ALL GOOD. Your new url is http://individualproject.esy.es/php/' .$key ;
+    //echo 'UPDATE ALL GOOD. Your new url is http://kclproject.esy.es/php/' .$key ;
 
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
@@ -53,7 +53,7 @@ function addCoordinatesToDatabase($lat , $long , $conn){
   $sql = "INSERT INTO POSITION (lat,longi)
   VALUES ( '$lat' , '$long')";
   if ($conn->query($sql) === TRUE) {
-    //echo 'UPDATE ALL GOOD. Your new url is http://individualproject.esy.es/php/' .$key ;
+    //echo 'UPDATE ALL GOOD. Your new url is http://kclproject.esy.es/php/' .$key ;
 
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
@@ -79,7 +79,7 @@ function getMostRecentCoordinates($conn){
 function deleteAllFromDataBase(){
   $sql="DELETE FROM POSITION";
   if ($conn->query($sql) === TRUE) {
-    //echo 'UPDATE ALL GOOD. Your new url is http://individualproject.esy.es/php/' .$key ;
+    //echo 'UPDATE ALL GOOD. Your new url is http://kclproject.esy.es/php/' .$key ;
 
   } else {
     echo "Error: " . $sql . "<br>" . $conn->error;

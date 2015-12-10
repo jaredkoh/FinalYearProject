@@ -18,10 +18,9 @@ foreach($html->find('img') as $element){
 		$img = $element->src ;
     // Starts with http:// or https:// (case insensitive).
     if (preg_match('#^https?://#i', $img) === 0) {
-			$element->src =  "http://individualproject.esy.es/".$key."/".$element->src;
+			$img =  "http://stme.esy.es/".$key."/".$img;
 
       if (!is_dir("$img")){
-
           $path = substr($img , 0 , strlen($img) - strlen(strrchr($img , "/")));
           mkdir(getcwd().$path , 0777 , true);
           copy($link.$img , getcwd().$img);

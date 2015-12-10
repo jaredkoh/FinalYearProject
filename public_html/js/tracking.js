@@ -6,7 +6,7 @@ navigator.geolocation.getCurrentPosition(function(position) {
         var lng = currPosition.coords.longitude;
         jQuery.ajax({
             type: "POST",
-            url:  "http://individualproject.esy.es/php/tracking.php",
+            url:  "http://stme.esy.es/php/tracking.php",
             data: 'lat='+lat+'&long='+lng,
             cache: false
         });

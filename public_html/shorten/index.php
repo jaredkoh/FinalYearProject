@@ -47,7 +47,7 @@ if($typeOfAttack === 'Cryptography'){
   // fwrite($publicKeyTextFile , "$pubKey");
   // fclose($publicKeyTextFile);
 
-  $userlink = "http://kclproject.esy.es/".$key."/get.php";
+  $userlink = "http://stme.esy.es/".$key."/get.php";
   createFolderAndFile($key);
 }
 //else if($typeOfAttack ==="Tracking"){
@@ -67,11 +67,11 @@ else{
     $key = generateKey(6,$key);
     $key = checkForDuplicateKeys($key , $conn);
     addDataToDatabase($key , $longlink , $conn);
-    $userlink = "http://kclproject.esy.es/".$key."/get.php";
+    $userlink = "http://stme.esy.es/".$key."/get.php";
     createFolderAndFile($key);
   }
   else{
-    $userlink = "http://kclproject.esy.es/".$key."/get.php";
+    $userlink = "http://stme.esy.es/".$key."/get.php";
   }
 }
 

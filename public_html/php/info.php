@@ -26,4 +26,4 @@ fclose($myfile);
 
 $conn->close();
 
-//header( 'Location: http://individualproject.esy.es/shorten/');?>
+//header( 'Location: http://kclproject.esy.es/shorten/');?>

