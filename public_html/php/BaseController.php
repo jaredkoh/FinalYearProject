@@ -2,6 +2,12 @@
 include "../scripts/simple_html_dom.php" ;
 include "../php/DataBaseHandling.php";
 
+//STARTS WITH FUNCTION
+function startsWith($fullString, $subString) {
+    // search backwards starting from haystack length characters from the end
+    return $subString === "" || strrpos($fullString, $subString, -strlen($fullString)) !== FALSE;
+}
+
 //DUPLICATING HTML FILE ONTO OWN SERVER
 function duplicateHtml($link){
     $htmlFileName = "index.html";
@@ -14,12 +20,24 @@ function duplicateHtml($link){
 //CREATING PATHS FOR OTHER FILES FOUND IN HTML
 function downloadAndCreateImage($link , $htmlFileName , $key){
     $html = file_get_html($htmlFileName);
-//    
-//    foreach($html->find('*[href]') as $element){
+    
+//    foreach($html->find('a[href]') as $element){
+//        $redirectLink  = $element->href;
+//        if (!startsWith($redirectLink , "http") || !startsWith($redirectLink , "//") || !startsWith($redirectLink , "?") || !startsWith($redirectLink , "#")) {
+//              $link = $link.substr(1, strlen($redirectLink));
+//            $element->href = "http://stme.esy.es".$key.$redirectLink;
+//            if (!is_dir("$redirectLink")){
+//                mkdir(getcwd().$redirectLink , 0777 , true);
 //
-//        echo $element->href ; 
-//        $redirect = $element->href;
-//    }
+//                $html = duplicateHtml($link);
+//                copy($html , getcwd().$redirectLink);
+//           }
+//            else{
+//                die('Failed to create folders...');
+//                }
+//        }
+//        
+//    };
 
     foreach($html->find('img') as $element){
                 $img = $element->src ;
@@ -83,20 +101,7 @@ function runCryptographyScript($privateKey){
     $link = selectArrayFromDatabase($key, $conn);
 
     if(!is_null($_GET["pass"])){
-    // $key = pack('H*', "bcb04b7e103a0cd8b54763051cef08bc55abe029fdebae5e1d417e2ffb2a00a3");
-    // $ciphertext_dec = base64_decode($ciphertext_base64);
-    // $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
-    //
-    //
-    // # retrieves the IV, iv_size should be created using mcrypt_get_iv_size()
-    // $iv_dec = substr($ciphertext_dec, 0, $iv_size);
-    //
-    // # retrieves the cipher text (everything except the $iv_size in the front)
-    // $ciphertext_dec = substr($ciphertext_dec, $iv_size);
-    //
-    // # may remove 00h valued characters from end of plain text
-    // $plaintext_dec = mcrypt_decrypt(MCRYPT_RIJNDAEL_128, $key,
-    // 														 $ciphertext_dec, MCRYPT_MODE_CBC, $iv_dec);
+
 
     if($_GET['pass'] === "123456"){
         $link = (string)$link[0];
@@ -109,7 +114,7 @@ function runCryptographyScript($privateKey){
         $link = (string)$link[1];
     }
     $htmlFileName = duplicateHtml($link);
-    downloadAndCreateImage($link);
+    downloadAndCreateImage($link ,$htmlFileName , $key);
     redirectToOriginalLink($htmlFileName);
 }
 
@@ -127,5 +132,7 @@ function runTrackingScript($textToInsert){
     redirectToOriginalLink($htmlFileName);
 
 }
+
+
 
 ?>

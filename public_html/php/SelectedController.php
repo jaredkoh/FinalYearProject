@@ -36,6 +36,7 @@ switch($typeOfAttack){
           break;
 
     case "Cryptography":
+        
           runCryptographyScript($privateKey);
           break;
 

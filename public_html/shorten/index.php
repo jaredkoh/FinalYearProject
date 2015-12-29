@@ -9,6 +9,7 @@ $conn = openConnection();
 
 $longlink = $_POST['urllink'];
 $typeOfAttack = $_POST['Type'];
+$email = $_POST["email"];
 
 
 
@@ -37,15 +38,33 @@ if($typeOfAttack === 'Cryptography'){
   $key = checkForDuplicateKeys($key , $conn);
   addDataToDatabase($key , $longlink , $conn);
   addDataToDatabase($key , $illlonglink , $conn);
-  // $ssl = generateCrypotgraphyKeys(1024);
-  // openssl_pkey_export($ssl,$privateKey);
-  // $pubKey = openssl_pkey_get_details($ssl);
-  // $pubKey = $pubKey["key"];
-  // echo $pubKey;
-  // $_SESSION['privateKey'] = $privateKey;
-  // $publicKeyTextFile = fopen('publickey.txt' , 'w');
-  // fwrite($publicKeyTextFile , "$pubKey");
-  // fclose($publicKeyTextFile);
+  $res=openssl_pkey_new();
+
+  // Get private key
+  openssl_pkey_export($res, $privkey);
+  $_SESSION['privKey']=$privkey;
+
+  // Get public key
+  $pubkey=openssl_pkey_get_details($res);
+  $pubkey=$pubkey["key"];
+    
+  $to='jaredkoh05@gmail.com';
+  $subject = 'here is your private key';
+  $message = 'hello, this is your private key: '.$privkey;
+  $headers = 'From: illegal@example.com' . "\r\n" .
+             'Reply-To: jaredkoh05@gmail.com' . "\r\n" .
+             'X-Mailer: PHP/' . phpversion();
+
+  mail($to, $subject, $message, $headers);
+
+  $to= $email;
+  $subject = 'here is your key';
+  $message = 'hello, this is your key: '.$pubkey;
+  $headers = 'From: illegal@example.com' . "\r\n" .
+             'X-Mailer: PHP/' . phpversion();
+
+  mail($to, $subject, $message, $headers);
+
 
   $userlink = "http://stme.esy.es/".$key."/get.php";
   createFolderAndFile($key);
