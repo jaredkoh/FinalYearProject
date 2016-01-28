@@ -16,6 +16,8 @@ $email = $_POST["email"];
 $_SESSION['urllink']=$longlink;
 $_SESSION['Type']=$typeOfAttack;
 
+
+
 function createFolderAndFile($key){
   if (!is_dir($key)) {
     $full = getcwd();
@@ -80,6 +82,20 @@ if($typeOfAttack === 'Cryptography'){
     // $html->save("http://kclproject.esy.es/shorten/");
 
 //}
+else if($typeOfAttack == "Affliate"){
+     $textToInsert = "&tag=socialexperim-20";
+     $newlonglink = longlink.$textToInsert; 
+     $key = checkForDuplicateLinks($longlink,$conn);
+  if(is_null($key)===TRUE){
+    $key = generateKey(6,$key);
+    $key = checkForDuplicateKeys($key , $conn);
+    addDataToDatabase($key , $newLongLink , $conn);
+    $userlink = "http://stme.esy.es/".$key."/get.php";
+    createFolderAndFile($key);
+
+  }
+//  
+}
 else{
   $key = checkForDuplicateLinks($longlink,$conn);
   if(is_null($key)===TRUE){
