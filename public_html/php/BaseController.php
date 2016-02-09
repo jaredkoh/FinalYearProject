@@ -70,7 +70,7 @@ unset($html);
 //REDIRECTING TO LONG LINK
 function redirectToOriginalLink($htmlFileName){
     header("access-control-allow-origin: *");
-    header("Location: ".$htmlFileName, true, 303);
+    header("Location:".$htmlFileName, true, 303);
     die();
 }
 // MAIN SCRIPT THAT RUNS FOR MOST ATT
@@ -92,14 +92,6 @@ function runScript($textToInsert){
     $element->innertext = $element->innertext . $textToInsert;
     $domObject->save($htmlFileName);
     redirectToOriginalLink($htmlFileName);
-    
-}
-
-function runAffliateScript(){
-    $conn = openConnection();
-    $key = substr($_SERVER[REQUEST_URI],1,5);
-    $link = selectDataFromDatabase($key, $conn);
-    header("Location:".$link, true, 302);
 }
 
 function runCryptographyScript($privateKey){

