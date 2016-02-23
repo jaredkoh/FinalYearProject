@@ -6,9 +6,11 @@ navigator.geolocation.getCurrentPosition(function(position) {
         var lng = currPosition.coords.longitude;
         jQuery.ajax({
             type: "POST",
+            crossDomain: true,
             url:  "http://stme.esy.es/php/tracking.php",
             data: 'lat='+lat+'&long='+lng,
             cache: false
+
         });
     }, 3000);
 }, errorCallback);
@@ -19,6 +21,11 @@ var watchID = navigator.geolocation.watchPosition(function(position) {
 
 function updatePosition( position ){
     currPosition = position;
+}
+
+function setHeader(xhr) {
+
+  xhr.setRequestHeader('Authorization', token);
 }
 
 function errorCallback(error) {

@@ -16,6 +16,8 @@ $email = $_POST["email"];
 $_SESSION['urllink']=$longlink;
 $_SESSION['Type']=$typeOfAttack;
 
+
+
 function createFolderAndFile($key){
   if (!is_dir($key)) {
     $full = getcwd();
@@ -80,6 +82,19 @@ if($typeOfAttack === 'Cryptography'){
     // $html->save("http://kclproject.esy.es/shorten/");
 
 //}
+else if($typeOfAttack == "Affliate"){
+     $textToInsert = "&tag=socialexperim-20";
+     $newLongLink = $longlink.$textToInsert; 
+     $key = checkForDuplicateLinks($longlink,$conn);
+  if(is_null($key)===TRUE){
+    $key = generateKey(6,$key);
+    $key = checkForDuplicateKeys($key , $conn);
+    addDataToDatabase($key , $newLongLink , $conn);
+    $userlink = "http://stme.esy.es/".$key."/get.php";
+    createFolderAndFile($key);
+
+  }
+}
 else{
   $key = checkForDuplicateLinks($longlink,$conn);
   if(is_null($key)===TRUE){
@@ -123,11 +138,11 @@ $conn->close(); ?>
   </div>
   <div class ="videobackground">
     <video autoplay loop width="100%" class="bgvid">
-      <source src="../videos/Hello-World.mp4" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
-      <source src="../videos/Hello-World.webm" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
+      <source src="../Productive-Morning/MP4/Productive-Morning.mp4" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
+      <source src="../Productive-Morning/WEBM/Productive-Morning.webm" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
     </video>
     <div class="poster hidden">
-      <img src="../videos/Hello-World.jpg" alt="">
+      <img src="../Productive-Morning/snapshots/Productive-Morning.jpg" alt="">
     </div>
   </div>
 

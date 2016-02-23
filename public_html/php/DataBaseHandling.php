@@ -3,7 +3,7 @@ function openConnection(){
   //USERNAMES AND PASSWORDS FOR DATABASE
   $servername = "mysql.hostinger.co.uk";
   $username = "u854725684_user";
-  $password = "iloveshyen";
+  $password = "rhydh2ZM3k";
   $dbname = "u854725684_data";
   //CONNECTING TO DATABASE
   $conn = new mysqli($servername, $username, $password, $dbname);
@@ -148,6 +148,39 @@ function generateKey($length_of_key ,$key){
 function generateCrypotgraphyKeys($bits){
   $ssl = openssl_pkey_new(array('private_key_bits' => $bits));
   return $ssl;
+
+}
+
+function addtoNewsDatabase($conn , $title , $imgsrc , $news, $header){
+      $sql = "INSERT INTO NEWS (title,imgsrc,news,header)
+  VALUES ( '$title' , '$imgsrc' , '$news', '$header')";
+  if ($conn->query($sql) === TRUE) {
+    //echo 'UPDATE ALL GOOD. Your new url is http://kclproject.esy.es/php/' .$key ;
+
+  } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+  }
+
+}
+
+function getNewsFromDatabase($conn){
+   
+  $fakenews = "";
+  $sql="SELECT title , imgsrc , news , header FROM NEWS
+ORDER BY RAND()
+LIMIT 1";
+  $result = $conn->query($sql);
+  $row = mysqli_fetch_array($result);
+    $title = (string)$row['title'];
+    $imgsrc = (string)$row['imgsrc'];
+    $news = (string)$row['news']; 
+    $header = (string)$row['header'];  
+
+    $fakenews = $title.','.$imgsrc.','.$news.','.$header;
+  
+    return $fakenews;
+
+  mysqli_free_result($result);
 
 }
 

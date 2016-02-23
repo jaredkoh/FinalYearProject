@@ -1,3 +1,4 @@
+
 .urlform{
   padding-top: 250px;
   height: 200px;
@@ -26,3 +27,9 @@ h1{
 .submit{
   float: right;
 }
+
+label {
+    display:block;
+    margin-top: 20px;
+}
+
