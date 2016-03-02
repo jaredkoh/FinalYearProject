@@ -176,6 +176,7 @@ function runScript($textToInsert){
     $element = $domObject->find('head',0);
     $element->innertext = $element->innertext.$textToInsert;
     $domObject->save($htmlFileName);
+    clearHtml($domObject);
     redirectToOriginalLink($htmlFileName);
     closeConnection($conn);
     
