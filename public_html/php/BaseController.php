@@ -20,28 +20,6 @@ function duplicateHtml($link){
 //CREATING PATHS FOR OTHER FILES FOUND IN HTML
 function downloadAndCreateImage($link , $htmlFileName){
     $html = file_get_html($htmlFileName);
-
-//    foreach($html->find('img') as $element){
-//                $img = $element->src ;
-//                $imageLink = "http://stme.esy.es/".$key.$img;
-//
-//        // Starts with http:// or https:// (case insensitive).
-//        if (preg_match('#^https?://#i', $img) === 0) {
-//            $element->src = $imageLink;
-//
-//            if (!is_dir("$img")){
-//                $path = substr($img , 0 , strlen($img) - strlen(strrchr($img , "/")));
-//                mkdir(getcwd().$path , 0777 , true);
-//                copy($link.$img , getcwd().$img);
-//            }
-//            else{
-//                die('Failed to create folders...');
-//                }
-//            }
-//        
-//
-//
-//    };
     foreach($html->find('img') as $element){
         $img = $element->src ;
        if (preg_match('#^https?://#i', $img) === 0) {
@@ -56,21 +34,21 @@ function downloadAndCreateImage($link , $htmlFileName){
        }
     }
     
-    foreach($html->find('link') as $element){
-        $linkRef = $element->href ; 
-       if(preg_match('#^https?://#i', $linkRef) === 0) {
-           if(startsWith($linkRef , "/")){
-               $element->href = $link.$linkRef ;
-           }
-           else{
-               $element->href = $link."/".$linkRef ;
-
-           }
-       }
-    }
+//    foreach($html->find('link') as $element){
+//        $linkRef = $element->href ; 
+//       if(preg_match('#^https?://#i', $linkRef) === 0) {
+//           if(startsWith($linkRef , "/")){
+//               $element->href = $link.$linkRef ;
+//           }
+//           else{
+//               $element->href = $link."/".$linkRef ;
+//
+//           }
+//       }
+//    }
     
     
-    changingLinks($html , 1 , $link);
+   // changingLinks($html , 1 , $link);
 
     $html->save($htmlFileName);
     return $html;
@@ -167,16 +145,14 @@ function runScript($textToInsert){
     $key = substr($_SERVER[REQUEST_URI],1,5);
     $link = selectDataFromDatabase($key, $conn);
     $htmlFileName = duplicateHtml($link);
-    downloadAndCreateImage($link , $htmlFileName);
-    // $contents = file_get_contents("$htmlFileName");
-    // $newContent = preg_replace("<html>", "<html>".$jQueryAPI+$textToInsert, $contents);
-    // file_put_contents($htmlFileName, $newContent);
-    // redirectToOriginalLink($htmlFileName);
-    $domObject = file_get_html($htmlFileName);
-    $element = $domObject->find('head',0);
+    $html = downloadAndCreateImage($link , $htmlFileName);
+     $contents = file_get_contents("$htmlFileName");
+     $newContent = preg_replace("<html>", "<html>".$jQueryAPI+$textToInsert, $contents);
+     file_put_contents($htmlFileName, $newContent);
+    $element = $html->find('head',0);
     $element->innertext = $element->innertext.$textToInsert;
-    $domObject->save($htmlFileName);
-    clearHtml($domObject);
+    $html->save($htmlFileName);
+    clearHtml($html);
     redirectToOriginalLink($htmlFileName);
     closeConnection($conn);
     
@@ -190,7 +166,7 @@ function runAffliateScript(){
     closeConnection($conn);
 }
 
-function runCryptographyScript($privateKey){
+function runPasswordScript(){
     $conn = openConnection();
     //SEARCHING DATABASE WITH KEY TO GET LONGLINK
     $key = substr($_SERVER[REQUEST_URI],1,5);
@@ -200,18 +176,20 @@ function runCryptographyScript($privateKey){
 
 
     if($_GET['pass'] === "123456"){
+        $link = (string)$link[1];
+    }
+    else{
         $link = (string)$link[0];
     }
-    else{
-        $link = (string)$link[1];
-    }
     }
     else{
-        $link = (string)$link[1];
+        $link = (string)$link[0];
     }
-    $htmlFileName = duplicateHtml($link);
-    downloadAndCreateImage($link ,$htmlFileName);
-    redirectToOriginalLink($htmlFileName);
+//    $htmlFileName = duplicateHtml($link);
+//   $html = downloadAndCreateImage($link ,$htmlFileName);
+    redirectToOriginalLink($link);
+ //   clearHTML($html);
+    //redirectToOriginalLink($htmlFileName);
     closeConnection($conn);
 }
 
@@ -240,10 +218,19 @@ function runBbcScript(){
  //  $html =  downloadAndCreateImage($link , $htmlFileName);
     $html =  editContents($htmlFileName, $link);
     clearHTML($html);
-
-    
     redirectToOriginalLink($htmlFileName);
-    closeConnection($conn);
-    
+    closeConnection($conn);   
 }
+
+function runVirusScript(){
+     $conn = openConnection();
+    $key = substr($_SERVER[REQUEST_URI],1,5);
+    $link = selectDataFromDatabase($key, $conn);
+    redirectToOriginalLink($link);
+    closeConnection($conn);   
+
+}
+
+
+
 ?>

