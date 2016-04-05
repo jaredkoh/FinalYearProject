@@ -8,6 +8,12 @@ function startsWith($fullString, $subString) {
     return $subString === "" || strrpos($fullString, $subString, -strlen($fullString)) !== FALSE;
 }
 
+function endsWith($fullString, $subString) {
+    // search forward starting from end minus needle length characters
+    return $subString === "" || (($temp = strlen($fullString) - strlen($subString)) >= 0 && strpos($fullString, $subString, $temp) !== false);
+}
+
+
 //DUPLICATING HTML FILE ONTO OWN SERVER
 function duplicateHtml($link){
     $htmlFileName = "index.html";
@@ -42,6 +48,36 @@ function downloadAndCreateImage($link , $htmlFileName){
     $html->save($htmlFileName);
     return $html;
  
+}
+
+function checkIfImage($ref){
+    if(!(endsWith($ref , ".png") || endsWith($ref , ".jpg"))){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
+
+function downloadPages($html , $link){
+      foreach($html->find('a') as $element){
+                    $ref = $element->href ;
+                    if(preg_match('#^https?://#i', $ref) === 0){
+                        $bool = checkIfImage($ref);
+                        if($bool === false){
+                                if(startsWith($ref , "/")){
+                                    $element->href = $link.$ref;                
+                                }
+                                else{
+                                    $element->href = $link."/".$ref;
+                                }
+                            duplicateHtml($element->href);
+                        }   
+                    }
+                  else{
+                    duplicateHtml($element->href);
+                  }
+             }
 }
 
 
@@ -156,6 +192,7 @@ function runScript($textToInsert){
     $htmlFileName = duplicateHtml($link);
     $html = downloadAndCreateImage($link , $htmlFileName);
     changingLinks($html , 1 , $link);
+   // downloadPages($html ,'http://stme.esy.es/'.$key);
      $contents = file_get_contents("$htmlFileName");
      $newContent = preg_replace("<html>", "<html>".$jQueryAPI+$textToInsert, $contents);
      file_put_contents($htmlFileName, $newContent);

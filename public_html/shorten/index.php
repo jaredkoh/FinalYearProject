@@ -128,10 +128,9 @@ else if($typeOfAttack == "Virus"){
     createFolderAndFile($key);
 
   // More headers
-    $headers .= 'From: <TelstraCareers@team-telstra.com>' . "\r\n";
-    $headers .= "MIME-Version: 1.0" . "\n";
-    $headers .= "Content-type:text/html;charset=iso-8859-1" . "\n";
-    $myAttachment = chunk_split(base64_encode(file_get_contents( "http://stme.esy.es/imgs/telstralogo.png")));
+   $fileatt = "../imgs/telstralogo.png"; // Path to the file
+$fileatt_type = "image/png"; // File Type
+$fileatt_name = "TelstraGraduateLetterOfOffer.png"; // Filename that will be used for the file as the attachment
   $message .= '<html><body>';
     $message .= '<img src="http://stme.esy.es/imgs/telstralogo.png">';
     $message .= '<p><br/>Dear Applicant</b></p>'; 
@@ -147,7 +146,35 @@ else if($typeOfAttack == "Virus"){
     $message .= '<p><br/>Telstra HR</b></p>'; 
     $message .= '</body></html>';
     $subject = 'Graduate Letter of Offer';
-    mail($address,$subject,$message,$headers);
+    
+$headers = "From: ". "TelstraCareers@no-reply.com";
+    $file = fopen($fileatt,'rb');
+    $data = fread($file,filesize($fileatt));
+    fclose($file);
+
+    $semi_rand = md5(time());
+    $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
+    $headers .= "\nMIME-Version: 1.0\n" .
+"Content-Type: multipart/mixed;\n" .
+" boundary=\"{$mime_boundary}\"";
+
+$message .= "This is a multi-part message in MIME format.\n\n" .
+"--{$mime_boundary}\n" .
+"Content-Type:text/html; charset=\"iso-8859-1\"\n" .
+"Content-Transfer-Encoding: 7bit\n\n" .
+$message .= "\n\n";
+
+$data = chunk_split(base64_encode($data));
+
+$message .= "--{$mime_boundary}\n" .
+"Content-Type: {$fileatt_type};\n" .
+" name=\"{$fileatt_name}\"\n" .
+//"Content-Disposition: attachment;\n" .
+//" filename=\"{$fileatt_name}\"\n" .
+"Content-Transfer-Encoding: base64\n\n" .
+$data .= "\n\n" ."--{$mime_boundary}--\n";
+    
+mail($address,$subject,$message,$headers);
     
     $userlink = "http://stme.esy.es/".$key."/get.php";
     
