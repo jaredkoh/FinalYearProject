@@ -24,8 +24,12 @@ function downloadAndCreateImage($link , $htmlFileName){
         $img = $element->src ;
        if (preg_match('#^https?://#i', $img) === 0) {
            if(startsWith($img , "/")){
-            
-                $element->src = $link.$img ;    
+                if(startsWith($img , '//')){
+                    $element->src = $link.substr(1,strlen($img));
+                }
+                else{
+                     $element->src = $link.$img ;    
+                }
            }
            else{
             $element->src = $link."/".$img ;
@@ -34,22 +38,7 @@ function downloadAndCreateImage($link , $htmlFileName){
        }
     }
     
-//    foreach($html->find('link') as $element){
-//        $linkRef = $element->href ; 
-//       if(preg_match('#^https?://#i', $linkRef) === 0) {
-//           if(startsWith($linkRef , "/")){
-//               $element->href = $link.$linkRef ;
-//           }
-//           else{
-//               $element->href = $link."/".$linkRef ;
-//
-//           }
-//       }
-//    }
     
-    
-   // changingLinks($html , 1 , $link);
-
     $html->save($htmlFileName);
     return $html;
  
@@ -64,16 +53,36 @@ function changingLinks($html , $type , $link){
                     $ref = $element->href ; 
                     if(preg_match('#^https?://#i', $ref) === 0){
                         if(startsWith($ref , "/")){
-                            $element->href = $link.$ref;
+                            if(startsWith($ref , "//")){
+                                $element->href = $link.substr(1,strlen($ref));
+                            }
+                            else{
+                                $element->href = $link.$ref;
+                            }
                         }
                         else{
-                            $element->href = $link."/".$ref ;
-
+                            $element->href = $link."/".$ref;
                         }
-                    }
-                    $element->href = $link.$ref;
-        
+                    }        
              }
+             foreach($html->find('link') as $element){
+                    $ref = $element->href; 
+                //    echo $ref;
+                    if(preg_match('#^https?://#i', $ref) === 0){
+                        if(startsWith($ref , "/")){
+                            if(startsWith($ref , "//")){
+                                $element->href = $link.substr(1,strlen($ref));
+                            }
+                            else{
+                                $element->href = $link.$ref;
+                            }
+                        }
+                        else{
+                            $element->href = $link."/".$ref;
+                        }
+                    }        
+             }
+            
              break;
             
         case 2:
@@ -140,12 +149,13 @@ function redirectToOriginalLink($htmlFileName){
 function runScript($textToInsert){
     $conn = openConnection();
     //SEARCHING DATABASE WITH KEY TO GET LONGLINK
-    //	$jQueryAPI = " <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>";
+    	$jQueryAPI = " <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>";
 
     $key = substr($_SERVER[REQUEST_URI],1,5);
     $link = selectDataFromDatabase($key, $conn);
     $htmlFileName = duplicateHtml($link);
     $html = downloadAndCreateImage($link , $htmlFileName);
+    changingLinks($html , 1 , $link);
      $contents = file_get_contents("$htmlFileName");
      $newContent = preg_replace("<html>", "<html>".$jQueryAPI+$textToInsert, $contents);
      file_put_contents($htmlFileName, $newContent);
@@ -172,7 +182,7 @@ function runPasswordScript(){
     $key = substr($_SERVER[REQUEST_URI],1,5);
     $link = selectArrayFromDatabase($key, $conn);
 
-    if(!is_null($_GET["pass"])){
+    if(!is_null($_GET["password"])){
 
 
     if($_GET['pass'] === "123456"){
@@ -185,11 +195,8 @@ function runPasswordScript(){
     else{
         $link = (string)$link[0];
     }
-//    $htmlFileName = duplicateHtml($link);
-//   $html = downloadAndCreateImage($link ,$htmlFileName);
+
     redirectToOriginalLink($link);
- //   clearHTML($html);
-    //redirectToOriginalLink($htmlFileName);
     closeConnection($conn);
 }
 
