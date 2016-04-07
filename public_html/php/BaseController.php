@@ -205,6 +205,20 @@ function runScript($textToInsert){
     
 }
 
+function runIframeScript(){
+        $conn = openConnection();
+    $key = substr($_SERVER[REQUEST_URI],1,5);
+    $link = selectDataFromDatabase($key, $conn);
+    $textToInsert = "<iframe width='100%' height='100%' src='$link' frameborder='0'></iframe>";
+    $htmlFileName = "index.html";
+    $html=fopen($htmlFileName, "w+");
+    fwrite($html , '<html><head>'.$textToInsert.'</head><body></body></html>');
+    fclose($html);
+    redirectToOriginalLink($htmlFileName);
+    closeConnection($conn);
+    
+}
+
 function runAffliateScript(){
     $conn = openConnection();
     $key = substr($_SERVER[REQUEST_URI],1,5);

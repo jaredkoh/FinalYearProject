@@ -61,8 +61,8 @@ switch($typeOfAttack){
         break;
 
     default:
-          $textToInsert="<iframe width='0' height='0' src='https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1' frameborder='0'></iframe>";
-          runScript($textToInsert);
+          
+          runIframeScript();
           break;
 }
 

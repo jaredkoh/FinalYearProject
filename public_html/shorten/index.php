@@ -29,11 +29,6 @@ function createFolderAndFile($key){
   }
 }
 
-function storingMultipleLinks(){
-    
-}
-
-
 //if($typeOfAttack === 'Cryptography'){
 //  $illlonglink = $_POST['illurlink'];
 //  $_SESSION['illlonglink'] = $illlonglink;
