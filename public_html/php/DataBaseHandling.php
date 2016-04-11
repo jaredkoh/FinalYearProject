@@ -163,6 +163,92 @@ function addtoNewsDatabase($conn , $title , $imgsrc , $news, $header){
 
 }
 
+function addSessionToDatabase($conn,$ip,$city,$country,$countrycode,$link){
+    $sql = ("INSERT INTO SESSIONS (ip,city,country,countrycode,link)
+					VALUES('$ip','$city','$country','$countrycode','$link')");
+      if ($conn->query($sql) === TRUE) {
+  //  echo 'UPDATE ALL GOOD';
+    } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+  }
+    
+}
+
+function updateSessionFromDatabase($conn,$ip , $link){
+    $check ="UPDATE SESSIONS SET dt=NOW() WHERE ip='$ip'AND link='$link'";
+    if ($conn->query($check) === TRUE) {
+    //echo 'UPDATE ALL GOOD. Your new url is http://kclproject.esy.es/php/' .$key ;
+
+    } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+  }
+    
+}
+
+function deleteSessionFromDatabase($conn){
+    $sql = ("DELETE FROM SESSIONS WHERE dt<SUBTIME(NOW(),'0 0:10:0')");
+     if ($conn->query($sql) === TRUE) {
+    //echo 'UPDATE ALL GOOD. Your new url is http://kclproject.esy.es/php/' .$key ;
+
+    } else {
+    echo "Error: " . $sql . "<br>" . $conn->error;
+  }
+}
+
+function checkForDuplicateSessions($conn,$ip,$link){
+    $check = "SELECT 1 FROM SESSIONS WHERE ip='$ip'AND link='$link'";
+    
+    $inDB = $conn->query($check);
+    if(!mysqli_num_rows($inDB)>0){
+        
+        return false;
+          mysqli_free_result($inDB);
+
+    }
+    else{
+        return true;
+          mysqli_free_result($inDB);
+
+    }
+    
+}
+
+function countNumOfUsersPerCountryFromSessions($conn , $link){
+    $userPerCountry = "SELECT countryCode,country, COUNT(*) AS total
+						FROM SESSIONS WHERE link='$link'
+						GROUP BY countryCode
+						ORDER BY total DESC
+						LIMIT 15";
+    
+    
+    $resultForPerCountry = $conn->query($userPerCountry);
+    
+    if ($resultForPerCountry){
+       
+        while($row=mysqli_fetch_assoc($resultForPerCountry))
+        {
+        echo '  
+                <div class="col-md-4">
+                        <h1 class="text-center">'.$row['total'].'</h1>
+                        <h3 class="text-center">'.htmlspecialchars($row['country']).'</h3>
+                    </div>
+            ';
+        }
+    }
+}
+
+function countTotalUsersFromSessions($conn,$link){
+    $totalNumOfUsers = "SELECT COUNT(*) FROM SESSIONS WHERE link='$link'";
+       $resultForTotal = $conn->query($totalNumOfUsers);
+    if($resultForTotal){
+        while($row=mysqli_fetch_array($resultForTotal)){
+             return $row[0];
+        }
+    }
+
+}
+					
+
 function getNewsFromDatabase($conn){
    
   $fakenews = "";

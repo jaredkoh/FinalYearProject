@@ -1,8 +1,7 @@
 <?php
 session_start();
-include "../php/DataBaseHandling.php";
-include "../scripts/simple_html_dom.php" ;
-include "../php/PHPMailerAutoload.php";
+require "../php/DataBaseHandling.php";
+require "../scripts/simple_html_dom.php" ;
 
 $key = "";
 $conn = openConnection();
