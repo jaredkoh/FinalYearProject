@@ -335,8 +335,8 @@ function runDosScript($textToInsert,$ip,$link){
     }
 
     // Removing entries not updated in the last 10 minutes:
-    deleteSessionFromDatabase($conn,$ip);
-   // runScript($textToInsert);
+    deleteSessionFromDatabase($conn);
+    runScript($textToInsert);
 }
 
 

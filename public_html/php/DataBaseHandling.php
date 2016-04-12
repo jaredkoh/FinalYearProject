@@ -228,10 +228,14 @@ function countNumOfUsersPerCountryFromSessions($conn , $link){
         while($row=mysqli_fetch_assoc($resultForPerCountry))
         {
         echo '  
-                <div class="col-md-4">
-                        <h1 class="text-center">'.$row['total'].'</h1>
-                        <h3 class="text-center">'.htmlspecialchars($row['country']).'</h3>
-                    </div>
+               
+                             <div class="col-md-4">
+                                     
+                                     <h2 class="text-center count">'.$row['total'].'</h2>
+                                     <h2 class="text-center">'.htmlspecialchars($row['country']).'</h2>
+                                     <div class="flag"><img src="../imgs/png/'.strtolower($row['countryCode']).'.png" heigth="25dp" width="25dp" class="img-responsive center-block"/> </div>
+                            </div>
+                       
             ';
         }
     }
