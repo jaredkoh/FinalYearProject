@@ -1,24 +1,42 @@
 <?php
-include "../scripts/simple_html_dom.php" ;
-include "../php/DataBaseHandling.php";
+require_once "../scripts/simple_html_dom.php";
+require_once "../php/DataBaseHandling.php";
 
-//STARTS WITH FUNCTION
+//adapted from http://stackoverflow.com/questions/834303/startswith-and-endswith-functions-in-php.
+//Check if a string starts with a substring
 function startsWith($fullString, $subString) {
     // search backwards starting from haystack length characters from the end
     return $subString === "" || strrpos($fullString, $subString, -strlen($fullString)) !== FALSE;
 }
-
+//Check if a string ends with a substring
 function endsWith($fullString, $subString) {
     // search forward starting from end minus needle length characters
     return $subString === "" || (($temp = strlen($fullString) - strlen($subString)) >= 0 && strpos($fullString, $subString, $temp) !== false);
 }
 
 
+function changeToKeyPath($key){
+     $path = "../".$key;
+    chdir($path);
+}
+//Prepend in a document.
+function prepend($string, $filename) {
+  $context = stream_context_create();
+  $fp = fopen($filename, 'r', 1, $context);
+  $tmpname = md5($string);
+  file_put_contents($tmpname, $string);
+  file_put_contents($tmpname, $fp, FILE_APPEND);
+  fclose($fp);
+  unlink($filename);
+  rename($tmpname, $filename);
+}
+
 //DUPLICATING HTML FILE ONTO OWN SERVER
-function duplicateHtml($link){
-    $htmlFileName = "index.html";
+function duplicateHtml($link,$key){
+    changeToKeyPath($key);
+    $htmlFileName = "index.php";
     $html=fopen($htmlFileName, "w+");
-    fwrite($html , file_get_contents("$link"));
+    fwrite($html , file_get_contents($link));
     fclose($html);
     return $htmlFileName;
 }
@@ -139,38 +157,30 @@ function clearHTML($html){
         unset($html);
 }
 
-function editContents($htmlFileName , $link){
-        $conn = openConnection();
-    
-    $actual_link = "http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-
-
+function editContents($htmlFileName,$link,$key){   
+   $conn = openConnection();
+    $actual_link = "http://stme.esy.es/".$key;
     $html = downloadAndCreateImage($link , $htmlFileName);
     changingLinks($html , 2 , $actual_link);
-
-    $news = "";
-$news = getNewsFromDatabase($conn); 
-    $newsArray = explode(',', $news);
     
+    $news = "";
+    $news = getNewsFromDatabase($conn); 
+    $newsArray = explode(',', $news);
     $title = $newsArray[0];
     $imgsrc = $newsArray[1];
     $news = $newsArray[2];
-     $header = $newsArray[3];
-
+    $header = $newsArray[3];
     foreach($html->find('h1') as $element){
        $element->innertext = "<p>$header</p>";
         break;
     }
     
-     foreach($html->find('div.story-body__inner') as $element){
-       $element->innertext = "<img class='js-image-replace' width='976' height='549' src='$imgsrc'</img>
-       <p class='story-body__introduction'>$title</p><p>$news</p>";
-         break;
-         
-}
+    foreach($html->find('div.story-body__inner') as $element){
+        $element->innertext = "<img class='js-image-replace' width='976' height='549' src='$imgsrc'</img>
+        <p class='story-body__introduction'>$title</p><p>$news</p>";
+        break; 
+    }
     $html->save($htmlFileName);
-    closeConnection($conn);
-    return $html;
     
 }
 
@@ -181,62 +191,41 @@ function redirectToOriginalLink($htmlFileName){
     header("Location: ".$htmlFileName, true, 303);
     die();
 }
-// MAIN SCRIPT THAT RUNS FOR MOST ATT
-function runScript($textToInsert){
-    $conn = openConnection();
-    //SEARCHING DATABASE WITH KEY TO GET LONGLINK
-    	$jQueryAPI = " <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>";
-
-    $key = substr($_SERVER[REQUEST_URI],1,5);
-    $link = selectDataFromDatabase($key, $conn);
-    $htmlFileName = duplicateHtml($link);
-    $html = downloadAndCreateImage($link , $htmlFileName);
-    changingLinks($html , 1 , $link);
-   // downloadPages($html ,'http://stme.esy.es/'.$key);
-     $contents = file_get_contents("$htmlFileName");
-     $newContent = preg_replace("<html>", "<html>".$jQueryAPI+$textToInsert, $contents);
-     file_put_contents($htmlFileName, $newContent);
+// MAIN SCRIPT THAT RUNS FOR MOST ATTACK
+function runScript($textToInsert,$conn,$key){
+   
+    $link = selectDataFromDatabase($key,$conn);
+    $htmlFileName = duplicateHtml($link,$key);
+    $html = downloadAndCreateImage($link,$htmlFileName);
+    changingLinks($html,1,$link);
     $element = $html->find('head',0);
     $element->innertext = $element->innertext.$textToInsert;
     $html->save($htmlFileName);
-    clearHtml($html);
-    redirectToOriginalLink($htmlFileName);
-    closeConnection($conn);
-    
+    clearHtml($html);    
 }
 
-function runIframeScript(){
-        $conn = openConnection();
-    $key = substr($_SERVER[REQUEST_URI],1,5);
+function runIframeScript($conn,$key){
     $link = selectDataFromDatabase($key, $conn);
     $textToInsert = "<iframe width='100%' height='100%' src='$link' frameborder='0'></iframe>";
+     changeToKeyPath($key);
     $htmlFileName = "index.html";
-    $html=fopen($htmlFileName, "w+");
-    fwrite($html , '<html><head>'.$textToInsert. '</head><body></body></html>');
-    fclose($html);
-    redirectToOriginalLink($htmlFileName);
-    closeConnection($conn);
-    
+    $html=fopen($htmlFileName, "a+");
+    fwrite($html , '<html><head>'.$textToInsert.'</head><body></body></html>');
+    fclose($html); 
 }
 
-function runAffliateScript(){
-    $conn = openConnection();
-    $key = substr($_SERVER[REQUEST_URI],1,5);
+function runAffliateScript($conn,$key){
     $link = selectDataFromDatabase($key, $conn);
     header("Location: ".$link, true, 302);
-    closeConnection($conn);
 }
 
-function runPasswordScript(){
-    $conn = openConnection();
+function runPasswordScript($key){
     //SEARCHING DATABASE WITH KEY TO GET LONGLINK
-    $key = substr($_SERVER[REQUEST_URI],1,5);
-    $link = selectArrayFromDatabase($key, $conn);
-
+    $script = '<?php require_once "../php/DataBaseHandling.php";  
+    $conn = openConnection();
+    $link = selectArrayFromDatabase("'.$key.'", $conn); 
     if(!is_null($_GET["password"])){
-
-
-    if($_GET['password'] === "123456"){
+    if($_GET["password"] === "123456"){
         $link = (string)$link[1];
     }
     else{
@@ -247,64 +236,62 @@ function runPasswordScript(){
         $link = (string)$link[0];
     }
 
-    redirectToOriginalLink($link);
-    closeConnection($conn);
+     header("access-control-allow-origin: *");
+    header("Location: ".$link, true, 303);
+    die();
+    ?>';
+    changeToKeyPath($key);
+    $html=fopen("index.php", "a+");
+    fwrite($html , $script);
+    fclose($html); 
 }
 
-function runTrackingScript($textToInsert){
-    $conn = openConnection();
+function runTrackingScript($textToInsert,$conn,$key){
     //SEARCHING DATABASE WITH KEY TO GET LONGLINK
-    $jQueryAPI = " <script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>";
-    $key = substr($_SERVER[REQUEST_URI],1,5);
+    $jQueryAPI ="<script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js'></script>";
     $link = selectDataFromDatabase($key, $conn);
     $htmlFileName = duplicateHtml($link);
     $html = downloadAndCreateImage($link , $htmlFileName);
     clearHTML($html);
     $contents = file_get_contents("$htmlFileName");
-    $newContent = preg_replace("</head>", $jQueryAPI+$textToInsert."</head", $contents);
+    $text = $jQueryAPI.$textToInsert;
+    $newContent = preg_replace("</head>",$text."</head", $contents);
     file_put_contents($htmlFileName, $newContent);
-    redirectToOriginalLink($htmlFileName);
-    closeConnection($conn);
-
 }
 
-function runBbcScript(){
-    $conn = openConnection();
-    $key = substr($_SERVER[REQUEST_URI],1,5);
-    $link = selectDataFromDatabase($key, $conn);
-    $htmlFileName = duplicateHtml($link);
- //  $html =  downloadAndCreateImage($link , $htmlFileName);
-    $html =  editContents($htmlFileName, $link);
-    clearHTML($html);
-    redirectToOriginalLink($htmlFileName);
-    closeConnection($conn);   
-}
-
-function runVirusScript(){
+function runBbcScript($conn,$key){
      $conn = openConnection();
-    $key = substr($_SERVER[REQUEST_URI],1,5);
     $link = selectDataFromDatabase($key, $conn);
-    redirectToOriginalLink($link);
-    closeConnection($conn);   
-
+    $htmlFileName = duplicateHtml($link,$key);
+    $text ="<?php require '../php/BaseController.php'; changeToKeyPath('$key'); editContents('$htmlFileName',
+    '$link','$key'); ?>";
+    changeToKeyPath($key);
+    prepend($text,$htmlFileName);
 }
 
-function runDosScript($textToInsert,$ip,$link){
-      $conn = openConnection();
-    $result = checkForDuplicateSessions($conn,$ip,$link);
+function runVirusScript($conn,$key){
+    $link = selectDataFromDatabase($key, $conn);
+}
+
+//Referenced from http://tutorialzine.com/2010/03/who-is-online-widget-php-mysql-jquery/
+function runDosScript($textToInsert,$conn,$key){
+     
+    //duplicate Html and create index.php file
+    runScript($textToInsert,$conn,$key);
+    $script = '<?php require_once "../php/DataBaseHandling.php"; $conn=openConnection();';
+    $script.= '$ip=$_SERVER["REMOTE_ADDR"];';
+    $script.= '$key = "'.$key.'";';
+    $script.='$link="http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]"; $result = checkForDuplicateSessions($conn,$ip,$link);
     if(!$result){
-        if($_COOKIE['geoData'])
-	   {
+        if($_COOKIE["geoData"]){
 		// A "geoData" cookie has been previously set by the script, so we will use it
 		
 		// Always escape any user input, including cookies:
-		list($city,$countryName,$countryAbbrev) = explode('|',mysqli_real_escape_string($conn ,strip_tags($_COOKIE['geoData'])));
+		list($city,$countryName,$countryAbbrev) = explode("|",mysqli_real_escape_string($conn ,strip_tags($_COOKIE["geoData"])));
 	   }
-        else
-        {
+        else{
             // Making an API call to Hostip:
-
-            $json = json_decode(file_get_contents('http://geoip.nekudo.com/api/'.$ip.'/en/full'));
+            $json = json_decode(file_get_contents("http://geoip.nekudo.com/api/'."$ip".'/en/full"));
 
             $city = $json->city->names->en;
 
@@ -313,30 +300,28 @@ function runDosScript($textToInsert,$ip,$link){
             $countryAbbrev = $json->country->iso_code;
 
             // Setting a cookie with the data, which is set to expire in a month:
-            setcookie('geoData',$city.'|'.$countryName.'|'.$countryAbbrev.'|'.time()+60*60*24*30);
+            setcookie("geoData",$city."|".$countryName."|".$countryAbbrev."|".time()+60*60*24*30);
         }
-	
-	
-	// In case the Hostip API fails:
-		
-        if (!$countryName)
-        {
-            $countryName='UNKNOWN';
-            $countryAbbrev='XX';
-            $city='(Unknown City?)';
+	    // In case the Hostip API fails:
+        if (!$countryName){
+            $countryName="UNKNOWN";
+            $countryAbbrev="XX";
+            $city="(Unknown City?)";
         }
         addSessionToDatabase($conn,$ip,$city,$countryName,$countryAbbrev,$link);
     
     }
-    else
-    {
+    else{
         // If the visitor is already online, just update the dt value of the row:
         updateSessionFromDatabase($conn,$ip,$link);
     }
 
     // Removing entries not updated in the last 10 minutes:
-    deleteSessionFromDatabase($conn);
-    runScript($textToInsert);
+    deleteSessionFromDatabase($conn);?>';
+    //get to the correct directory
+     changeToKeyPath($key);
+    //add script to index.php itself 
+    prepend($script , "index.php");
 }
 
 

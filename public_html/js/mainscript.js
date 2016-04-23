@@ -1,4 +1,4 @@
-
+//shows and hides the forms
 $(document).ready(function() {
   $('#urlform').find('[name="Type"]').selectpicker();
   $('#Type').change(function(){

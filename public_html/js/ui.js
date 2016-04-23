@@ -1,4 +1,4 @@
-
+//redirects to the url in the form. 
 $(document).ready(function(){
     highlight($("#form"));
     $("#go").click(function(){

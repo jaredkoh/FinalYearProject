@@ -1,5 +1,5 @@
 <?php
-require "../php/DataBaseHandling.php";
+require_once "../php/DataBaseHandling.php";
 $conn = openConnection();
 header('Access-Control-Allow-Origin: *');
 //header('Content-Type: application/json');
